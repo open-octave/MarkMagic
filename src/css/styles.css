@@ -584,6 +584,10 @@ video {
   position: sticky;
 }
 
+.isolate {
+  isolation: isolate;
+}
+
 .\!block {
   display: block !important;
 }
@@ -608,6 +612,10 @@ video {
   display: contents;
 }
 
+.list-item {
+  display: list-item;
+}
+
 .hidden {
   display: none;
 }
@@ -620,9 +628,21 @@ video {
   border-width: 1px;
 }
 
+.italic {
+  font-style: italic;
+}
+
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+
+.underline {
+  text-decoration-line: underline;
+}
+
+.line-through {
+  text-decoration-line: line-through;
 }
 
 .shadow {

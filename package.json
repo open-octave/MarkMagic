@@ -13,12 +13,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@codemirror/autocomplete": "^6.6.0",
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/commands": "^6.2.3",
+    "@codemirror/lint": "^6.2.1",
+    "@codemirror/state": "^6.2.0",
+    "@codemirror/view": "^6.10.0",
+    "codemirror": "^6.0.1",
     "j2m": "^1.1.0"
   },
   "devDependencies": {
-    "@types/codemirror": "^5.60.7",
-    "codemirror": "^6.0.1",
-    "commands": "link:@types/codemirror/commands",
     "esbuild": "^0.17.18",
     "lang-javascript": "link:@types/@codemirror/lang-javascript",
     "tailwindcss": "^3.3.2",
