@@ -1,12 +1,11 @@
-import { keymap } from "@codemirror/view";
+import { EditorState } from "@codemirror/state";
+import { EditorView } from "@codemirror/view";
 
 let startState = EditorState.create({
   doc: "Hello World",
-  extensions: [keymap.of(defaultKeymap)],
 });
 
 let view = new EditorView({
   state: startState,
-  extensions: [basicSetup, javascript()],
-  parent: document.querySelector(".example"),
+  parent: document.body,
 });

@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@types/codemirror': ^5.60.7
   codemirror: ^6.0.1
-  commands: link:@types/@codemirror/commands
+  commands: link:@types/codemirror/commands
   esbuild: ^0.17.18
   j2m: ^1.1.0
   lang-javascript: link:@types/@codemirror/lang-javascript
