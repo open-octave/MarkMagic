@@ -1,0 +1,20 @@
+{
+  "name": "ext",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:css": "npx tailwindcss -i ./css/main.css -o ./src/css/main.css --watch",
+    "build": "esbuild src/browser-action/main.js --bundle --minify --outfile=src/browser-action/browser-action.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "j2m": "^1.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.17.18",
+    "tailwindcss": "^3.3.2"
+  }
+}
