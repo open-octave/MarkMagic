@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:css": "npx tailwindcss -i ./css/main.css -o ./src/css/main.css --watch",
-    "build": "esbuild src/browser-action/main.js --bundle --minify --outfile=src/browser-action/browser-action.js"
+    "build": "esbuild src/browser-action/main.js --bundle --minify --outfile=src/browser-action/browser-action.js",
+    "dev:css": "npx tailwindcss -i ./src/css/main.css -o ./src/css/styles.css --watch",
+    "dev:js": "esbuild src/browser-action/main.ts --bundle --sourcemap --outfile=src/browser-action/browser-action.js --watch",
+    "dev": "pnpm dev:css & pnpm dev:js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +16,12 @@
     "j2m": "^1.1.0"
   },
   "devDependencies": {
+    "@types/codemirror": "^5.60.7",
+    "codemirror": "^6.0.1",
+    "commands": "link:@types/@codemirror/commands",
     "esbuild": "^0.17.18",
-    "tailwindcss": "^3.3.2"
+    "lang-javascript": "link:@types/@codemirror/lang-javascript",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.0.4"
   }
 }
