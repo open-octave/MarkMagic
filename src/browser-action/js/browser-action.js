@@ -20902,7 +20902,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     markdown = markdown.replace(
       new RegExp("<(" + Object.keys(map).join("|") + ")>(.*?)</\\1>", "g"),
       // regex to match <sup>content</sup> and <sub>content</sub>
-      (match, from, content) => {
+      (_, from, content) => {
         const to = map[from];
         return to + content + to;
       }
@@ -20911,52 +20911,8 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     markdown = markdown.replace(/`([^`]+)`/g, "{{$1}}");
     markdown = markdown.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "[$1|$2]");
     markdown = markdown.replace(/<([^>]+)>/g, "[$1]");
-    const lines = markdown.split(/\r?\n/gm);
-    const lines_to_remove = [];
-    for (let i = 0; i < lines.length; i++) {
-      let line_content = lines[i];
-      if (line_content.match(/\|---/g) !== null) {
-        lines[i - 1] = lines[i - 1].replace(/\|/g, "||");
-        lines.splice(i, 1);
-      }
-    }
-    markdown = "";
-    for (let i = 0; i < lines.length; i++) {
-      markdown += lines[i] + "\n";
-    }
     return markdown;
   }
-  toJira(`## QA
-
-\`\`\`ts
-  const START = "J2MBLOCKPLACEHOLDER";
-  const replacementsList: { key: string; value: string }[] = [];
-  let counter = 0;
-\`\`\`
-
-
-- Ensure that there are 3 environments available for testing the form and that they are reading their environment variables correctly
-    - dev 
-        -  \`pnpm --filter lead-widget-service dev\`
-    - qa
-        - \`pnpm --filter lead-widget-service build:qa && pnpm --filter lead-widget-service preview\`
-    - production
-        - \`pnpm --filter lead-widget-service build && pnpm --filter lead-widget-service preview\`
-- Ensure that the form can be opened and closed
-    - Form Closing Conditions
-        - User clicks the close button
-        - User clicks outside of the form
-- Ensure that if the grins agent is selected for the referrer field the form conditionally displays the active agents from the agent service request \`/agents/names\` for the user to select from
-
-~~strike me~~
-
-
-\`\`\`python
-  START = "J2MBLOCKPLACEHOLDER"
-  replacementsList = []
-  counter = 0
-\`\`\`
-`);
 
   // src/browser-action/ts/mark-magic/to-markdown.ts
   function toMarkdown(input) {
