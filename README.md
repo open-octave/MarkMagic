@@ -21,5 +21,4 @@
     <a href="CONTRIBUTING.md">Contributing Guide</a> •
     <a href="https://github.com/Discendo-Discimus/MarkMagic">API for this project</a> •
     <a href="https://github.com/Discendo-Discimus/MarkMagic/issues">Issues</a> •
-    <a href="https://github.com/Discendo-Discimus/MarkMagic/pulls">Pull Requests</a> •
-    <a href="LICENSE">License</a>
+    <a href="https://github.com/Discendo-Discimus/MarkMagic/pulls">Pull Requests</a>
