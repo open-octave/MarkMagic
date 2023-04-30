@@ -1,16 +1,43 @@
 <script type="text/javascript" src="./js/browser-action.js" defer></script>
 <link rel="stylesheet" href="../css/styles.css" />
 
-<main class="w-[50rem] min-h-[37.5rem] overflow-hidden">
-  <div class="w-full flex justify-between p-3 gap-3">
-    <div class="w-1/2">
-      <h2 class="text-3xl font-semibold mb-3">Markdown</h2>
-      <div id="editor-input" class="w-full h-[30rem]"></div>
+<body class="w-[50rem] min-h-[37.5rem] overflow-hidden p-2 bg-slate-900">
+  <main class="p-3 bg-slate-800 text-slate-400 rounded-md h-full">
+    <nav class="flex items-center justify-between">
+      <div class="">
+        <h1 class="text-3xl text-white font-semibold">MarkMagic</h1>
+      </div>
+      <div class="flex items-center justify-between text-sm text-gray-300">
+        <a
+          class="cursor-pointer hover:bg-gray-700 hover:text-white rounded-md px-3 py-2"
+          target="_blank"
+          href="#"
+          >Github</a
+        >
+        <a
+          class="cursor-pointer hover:bg-gray-700 hover:text-white rounded-md px-3 py-2"
+          target="_blank"
+          href="https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all"
+          >Jira Markup Reference</a
+        >
+        <a
+          class="cursor-pointer hover:bg-gray-700 hover:text-white rounded-md px-3 py-2"
+          target="_blank"
+          href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+          >Markdown Reference</a
+        >
+      </div>
+    </nav>
+    <hr class="mt-1 mb-3 border-slate-600" />
+    <div class="w-full flex justify-between gap-3 text-white">
+      <div class="w-1/2">
+        <h2 class="text-sm font-semibold mb-2">Markdown</h2>
+        <div id="editor-input" class="w-full h-[30rem]"></div>
+      </div>
+      <div class="w-1/2">
+        <h2 class="text-sm font-semibold mb-2">Jira</h2>
+        <div id="editor-output" class="w-full h-[30rem]"></div>
+      </div>
     </div>
-
-    <div class="w-1/2">
-      <h2 class="text-3xl font-semibold mb-3">Jira</h2>
-      <div id="editor-output" class="w-full h-[30rem]"></div>
-    </div>
-  </div>
-</main>
+  </main>
+</body>

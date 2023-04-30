@@ -1,33 +1,24 @@
 import * as ace from "brace";
-import * as J2M from "j2m";
-
-// To fix the J2M module I needed to make the export not set J2M to the window
 
 import "brace/mode/markdown";
 import "brace/theme/twilight";
 
-// ==========================
-//       Shared Logic
-// ==========================
+import { MarkMagic } from "./mark-magic";
 
-function setMarkdown() {
-  const markdown = J2M.toM(jiraEditor.getValue());
-  markdownEditor.setValue(markdown);
-}
-
-function setJira() {
-  const jira = J2M.toJ(markdownEditor.getValue());
-  jiraEditor.setValue(jira);
-}
-
-// ==========================
-//       Input Editor
-// ==========================
+// ============================
+//       Markdown Editor
+// ============================
 
 const markdownEditor = ace.edit("editor-input");
+markdownEditor.$blockScrolling = Infinity;
 
 markdownEditor.getSession().setMode("ace/mode/markdown");
 markdownEditor.setTheme("ace/theme/twilight");
+
+function setJira() {
+  const jira = MarkMagic.toJira(markdownEditor.getValue());
+  jiraEditor.setValue(jira);
+}
 
 markdownEditor.on("focus", function () {
   markdownEditor.on("change", setJira);
@@ -37,13 +28,19 @@ markdownEditor.on("blur", function () {
 });
 
 // ==========================
-//      Output Editor
+//      Jira Editor
 // ==========================
 
 const jiraEditor = ace.edit("editor-output");
+jiraEditor.$blockScrolling = Infinity;
 
 jiraEditor.session.setMode("ace/mode/markdown");
 jiraEditor.setTheme("ace/theme/twilight");
+
+function setMarkdown() {
+  const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
+  markdownEditor.setValue(markdown);
+}
 
 jiraEditor.on("focus", function () {
   jiraEditor.on("change", setMarkdown);
