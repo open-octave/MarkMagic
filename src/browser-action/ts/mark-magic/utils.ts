@@ -198,5 +198,5 @@ export function getSupportedName(identifierOrExtension: string): string {
     }
   }
 
-  return "bash";
+  return "none";
 }
