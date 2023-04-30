@@ -1,38 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script type="text/javascript" src="./js/browser-action.js" defer></script>
+<link rel="stylesheet" href="../css/styles.css" />
 
-    <script type="text/javascript" src="browser-action.js"></script>
-
-    <link rel="stylesheet" href="../css/styles.css" />
-  </head>
-  <body>
-    <style type="text/css">
-      #mainPopup {
-        padding: 10px;
-        height: 200px;
-        width: 400px;
-        font-family: Helvetica, Ubuntu, Arial, sans-serif;
-      }
-      h1 {
-        font-size: 2em;
-      }
-    </style>
-
-    <div id="mainPopup">
-      <h1>Hello extensionizr!</h1>
-      <p>
-        To shut this popup down, edit the manifest file and remove the "default
-        popup" key. To edit it, just edit
-        ext/browser-action/browser-action.html. The CSS is there, too.
-      </p>
+<main class="w-[50rem] min-h-[37.5rem] overflow-hidden">
+  <div class="w-full flex justify-between p-3 gap-3">
+    <div class="w-1/2">
+      <h2 class="text-3xl font-semibold mb-3">Markdown</h2>
+      <div id="editor-input" class="w-full h-[30rem]"></div>
     </div>
 
-    <div class="example">
-      <h1 class="text-red-600">test</h1>
+    <div class="w-1/2">
+      <h2 class="text-3xl font-semibold mb-3">Jira</h2>
+      <div id="editor-output" class="w-full h-[30rem]"></div>
     </div>
-  </body>
-</html>
+  </div>
+</main>
