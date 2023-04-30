@@ -20679,32 +20679,221 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     dom.importCssString(exports.cssText, exports.cssClass);
   });
 
+  // src/browser-action/ts/mark-magic/utils.ts
+  var codeBlockSupportedLanguages = {
+    ActionScript: {
+      supportedName: "actionscript",
+      languageIdentifiers: [
+        "ActionScript",
+        "actionScript",
+        "action_script",
+        "action-script"
+      ],
+      fileExtensions: ["as"]
+    },
+    Ada: {
+      supportedName: "ada",
+      languageIdentifiers: ["Ada", "ada", "ada", "ada"],
+      fileExtensions: ["adb", "ads"]
+    },
+    AppleScript: {
+      supportedName: "applescript",
+      languageIdentifiers: [
+        "AppleScript",
+        "appleScript",
+        "apple_script",
+        "apple-script"
+      ],
+      fileExtensions: ["applescript", "scpt"]
+    },
+    bash: {
+      supportedName: "bash",
+      languageIdentifiers: ["Bash", "bash", "bash", "bash"],
+      fileExtensions: ["sh", "bash"]
+    },
+    C: {
+      supportedName: "c",
+      languageIdentifiers: ["C", "c", "c", "c"],
+      fileExtensions: ["c"]
+    },
+    "C#": {
+      supportedName: "c#",
+      languageIdentifiers: ["C#", "c#", "c_#", "c-#"],
+      fileExtensions: ["cs"]
+    },
+    "C++": {
+      supportedName: "c++",
+      languageIdentifiers: ["C++", "c++", "c_+_+", "c-+-+"],
+      fileExtensions: ["cpp", "hpp", "cxx", "hxx"]
+    },
+    CSS: {
+      supportedName: "css",
+      languageIdentifiers: ["CSS", "css", "css", "css"],
+      fileExtensions: ["css"]
+    },
+    Erlang: {
+      supportedName: "erlang",
+      languageIdentifiers: ["Erlang", "erlang", "erlang", "erlang"],
+      fileExtensions: ["erl", "hrl"]
+    },
+    Go: {
+      supportedName: "go",
+      languageIdentifiers: ["Go", "go", "go", "go"],
+      fileExtensions: ["go"]
+    },
+    Groovy: {
+      supportedName: "groovy",
+      languageIdentifiers: ["Groovy", "groovy", "groovy", "groovy"],
+      fileExtensions: ["groovy", "gradle"]
+    },
+    Haskell: {
+      supportedName: "haskell",
+      languageIdentifiers: ["Haskell", "haskell", "haskell", "haskell"],
+      fileExtensions: ["hs", "lhs"]
+    },
+    HTML: {
+      supportedName: "html",
+      languageIdentifiers: ["HTML", "html", "html", "html"],
+      fileExtensions: ["html", "htm"]
+    },
+    Java: {
+      supportedName: "java",
+      languageIdentifiers: ["Java", "java", "java", "java"],
+      fileExtensions: ["java"]
+    },
+    JavaScript: {
+      supportedName: "javascript",
+      languageIdentifiers: [
+        "JavaScript",
+        "javaScript",
+        "java_script",
+        "java-script"
+      ],
+      fileExtensions: ["js"]
+    },
+    TypesScript: {
+      supportedName: "javascript",
+      languageIdentifiers: ["TypeScript", "typeScript"],
+      fileExtensions: ["ts"]
+    },
+    JSON: {
+      supportedName: "json",
+      languageIdentifiers: ["JSON", "json", "json", "json"],
+      fileExtensions: ["json"]
+    },
+    Lua: {
+      supportedName: "lua",
+      languageIdentifiers: ["Lua", "lua", "lua", "lua"],
+      fileExtensions: ["lua"]
+    },
+    Nyan: {
+      supportedName: "nyan",
+      languageIdentifiers: ["Nyan", "nyan", "nyan", "nyan"],
+      fileExtensions: ["nyan"]
+    },
+    Objc: {
+      supportedName: "objc",
+      languageIdentifiers: ["ObjC", "objC", "obj_c", "obj-c"],
+      fileExtensions: ["m", "h"]
+    },
+    Perl: {
+      supportedName: "perl",
+      languageIdentifiers: ["Perl", "perl", "perl", "perl"],
+      fileExtensions: ["pl", "pm", "t"]
+    },
+    PHP: {
+      supportedName: "php",
+      languageIdentifiers: ["PHP", "php", "php", "php"],
+      fileExtensions: ["php", "php3", "php4", "php5", "php7", "phtml"]
+    },
+    Python: {
+      supportedName: "python",
+      languageIdentifiers: ["Python", "python", "python", "python"],
+      fileExtensions: ["py", "pyw"]
+    },
+    R: {
+      supportedName: "r",
+      languageIdentifiers: ["R", "r", "r", "r"],
+      fileExtensions: ["r", "R"]
+    },
+    Ruby: {
+      supportedName: "ruby",
+      languageIdentifiers: ["Ruby", "ruby", "ruby", "ruby"],
+      fileExtensions: ["rb", "rbw"]
+    },
+    Scala: {
+      supportedName: "scala",
+      languageIdentifiers: ["Scala", "scala", "scala", "scala"],
+      fileExtensions: ["scala"]
+    },
+    SQL: {
+      supportedName: "sql",
+      languageIdentifiers: ["SQL", "sql", "sql", "sql"],
+      fileExtensions: ["sql"]
+    },
+    Swift: {
+      supportedName: "swift",
+      languageIdentifiers: ["Swift", "swift", "swift", "swift"],
+      fileExtensions: ["swift"]
+    },
+    VisualBasic: {
+      supportedName: "visualbasic",
+      languageIdentifiers: [
+        "VisualBasic",
+        "visualBasic",
+        "visual_basic",
+        "visual-basic"
+      ],
+      fileExtensions: ["vb", "vbs"]
+    },
+    XML: {
+      supportedName: "xml",
+      languageIdentifiers: ["XML", "xml", "xml", "xml"],
+      fileExtensions: ["xml", "xsl", "xslt", "xsd"]
+    },
+    YAML: {
+      supportedName: "yaml",
+      languageIdentifiers: ["YAML", "yaml", "yaml", "yaml"],
+      fileExtensions: ["yaml", "yml"]
+    }
+  };
+  function getSupportedName(identifierOrExtension) {
+    for (const languageKey in codeBlockSupportedLanguages) {
+      const language = codeBlockSupportedLanguages[languageKey];
+      if (language.languageIdentifiers.includes(identifierOrExtension) || language.fileExtensions.includes(identifierOrExtension)) {
+        return language.supportedName;
+      }
+    }
+    return "bash";
+  }
+
   // src/browser-action/ts/mark-magic/to-jira.ts
-  function toJira(input) {
+  function toJira(markdown) {
     const START = "J2MBLOCKPLACEHOLDER";
     const replacementsList = [];
     let counter = 0;
-    input = input.replace(
-      /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g,
-      (match, synt, content) => {
+    const matchCodeBlockWithSyntaxRegex = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+    markdown = markdown.replace(
+      matchCodeBlockWithSyntaxRegex,
+      (_codeBlock, codeBlockSyntaxType, codeBlockContent) => {
         let code = "{code";
-        if (synt) {
-          code += ":" + synt;
+        if (codeBlockSyntaxType) {
+          code += ":" + getSupportedName(codeBlockSyntaxType);
         }
-        code += "}" + content + "{code}";
+        code += "}" + codeBlockContent + "{code}";
         const key = START + counter++ + "%%";
         replacementsList.push({ key, value: code });
         return key;
       }
     );
-    input = input.replace(/^([#]+)(.*?)$/gm, (match, level, content) => {
+    markdown = markdown.replace(/^([#]+)(.*?)$/gm, (match, level, content) => {
       return "h" + level.length + "." + content;
     });
-    input = input.replace(/([*_]+)(.*?)\1/g, (match, wrapper, content) => {
+    markdown = markdown.replace(/([*_]+)(.*?)\1/g, (match, wrapper, content) => {
       const to = wrapper.length === 1 ? "_" : "*";
       return to + content + to;
     });
-    input = input.replace(/^(\s*)- (.*)$/gm, (match, level, content) => {
+    markdown = markdown.replace(/^(\s*)- (.*)$/gm, (match, level, content) => {
       let len = 2;
       if (level.length > 0) {
         len = level.length / 4 + 2;
@@ -20718,22 +20907,22 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
       sup: "^",
       sub: "~"
     };
-    input = input.replace(
+    markdown = markdown.replace(
       new RegExp("<(" + Object.keys(map).join("|") + ")>(.*?)</\\1>", "g"),
       (match, from, content) => {
         const to = map[from];
         return to + content + to;
       }
     );
-    input = input.replace(/~~(.*?)~~/g, "-$1-");
-    input = input.replace(/`([^`]+)`/g, "{{$1}}");
-    input = input.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "[$1|$2]");
-    input = input.replace(/<([^>]+)>/g, "[$1]");
+    markdown = markdown.replace(/~~(.*?)~~/g, "-$1-");
+    markdown = markdown.replace(/`([^`]+)`/g, "{{$1}}");
+    markdown = markdown.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "[$1|$2]");
+    markdown = markdown.replace(/<([^>]+)>/g, "[$1]");
     for (let i = 0; i < replacementsList.length; i++) {
       const sub = replacementsList[i];
-      input = input.replace(sub["key"], sub["value"]);
+      markdown = markdown.replace(sub["key"], sub["value"]);
     }
-    const lines = input.split(/\r?\n/gm);
+    const lines = markdown.split(/\r?\n/gm);
     const lines_to_remove = [];
     for (let i = 0; i < lines.length; i++) {
       let line_content = lines[i];
@@ -20742,11 +20931,11 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
         lines.splice(i, 1);
       }
     }
-    input = "";
+    markdown = "";
     for (let i = 0; i < lines.length; i++) {
-      input += lines[i] + "\n";
+      markdown += lines[i] + "\n";
     }
-    return input;
+    return markdown;
   }
 
   // src/browser-action/ts/mark-magic/to-markdown.ts
@@ -20797,7 +20986,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
   };
 
   // src/browser-action/ts/main.ts
-  var markdownEditor = ace2.edit("editor-input");
+  var markdownEditor = ace2.edit("markdown-editor");
   markdownEditor.$blockScrolling = Infinity;
   markdownEditor.getSession().setMode("ace/mode/markdown");
   markdownEditor.setTheme("ace/theme/twilight");
@@ -20811,7 +21000,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
   markdownEditor.on("blur", function() {
     markdownEditor.off("change", setJira);
   });
-  var jiraEditor = ace2.edit("editor-output");
+  var jiraEditor = ace2.edit("jira-editor");
   jiraEditor.$blockScrolling = Infinity;
   jiraEditor.session.setMode("ace/mode/markdown");
   jiraEditor.setTheme("ace/theme/twilight");

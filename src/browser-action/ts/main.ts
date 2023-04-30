@@ -9,7 +9,7 @@ import { MarkMagic } from "./mark-magic";
 //       Markdown Editor
 // ============================
 
-const markdownEditor = ace.edit("editor-input");
+const markdownEditor = ace.edit("markdown-editor");
 markdownEditor.$blockScrolling = Infinity;
 
 markdownEditor.getSession().setMode("ace/mode/markdown");
@@ -31,7 +31,7 @@ markdownEditor.on("blur", function () {
 //      Jira Editor
 // ==========================
 
-const jiraEditor = ace.edit("editor-output");
+const jiraEditor = ace.edit("jira-editor");
 jiraEditor.$blockScrolling = Infinity;
 
 jiraEditor.session.setMode("ace/mode/markdown");

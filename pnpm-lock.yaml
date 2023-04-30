@@ -6,14 +6,12 @@ specifiers:
   brace: ^0.11.1
   concurrently: ^8.0.1
   esbuild: ^0.17.18
-  j2m: ^1.1.0
   tailwindcss: ^3.3.2
   typescript: ^5.0.4
 
 dependencies:
   ace-builds: 1.18.0
   brace: 0.11.1
-  j2m: 1.1.0
 
 devDependencies:
   '@types/ace': 0.0.48
@@ -400,11 +398,6 @@ packages:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
     dev: true
 
-  /colors/1.4.0:
-    resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
-    engines: {node: '>=0.1.90'}
-    dev: false
-
   /commander/4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
@@ -618,14 +611,6 @@ packages:
     engines: {node: '>=0.12.0'}
     dev: true
 
-  /j2m/1.1.0:
-    resolution: {integrity: sha512-48wXbhVo5fUsqxAhpEPZIP8HJaHGJGK38XwZCyjbS5MuEdkCR786U4U4Hk5g34e60Kf/jF8y+TphVTHYe/mSWA==}
-    hasBin: true
-    dependencies:
-      colors: 1.4.0
-      minimist: 1.2.8
-    dev: false
-
   /jiti/1.18.2:
     resolution: {integrity: sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==}
     hasBin: true
@@ -662,10 +647,6 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
-
-  /minimist/1.2.8:
-    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
-    dev: false
 
   /mz/2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
