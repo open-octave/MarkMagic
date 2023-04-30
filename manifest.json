@@ -1,7 +1,7 @@
 {
   "name": "Mark Magic",
   "version": "0.0.1",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "description": "This is a Chrome extension that allows you to convert Github flavored markdown to Jira (v8.13.X) markup.",
   "homepage_url": "https://github.com/Discendo-Discimus/MarkMagic",
   "icons": {
@@ -9,10 +9,9 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "icons/icon16.png",
     "default_title": "browser action demo",
     "default_popup": "src/browser-action/browser-action.html"
-  },
-  "permissions": ["https://jira.rate.com/*"]
+  }
 }
