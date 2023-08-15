@@ -22,3 +22,11 @@
     <a href="https://github.com/Discendo-Discimus/MarkMagic">API for this project</a> •
     <a href="https://github.com/Discendo-Discimus/MarkMagic/issues">Issues</a> •
     <a href="https://github.com/Discendo-Discimus/MarkMagic/pulls">Pull Requests</a>
+
+<br />
+
+<div align="center">
+    <sub>External References</sub>
+    <br />
+    <a href="https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all">Jira Markup</a> •
+    <a href="https://github.github.com/gfm/">Github Flavored Markdown</a>
