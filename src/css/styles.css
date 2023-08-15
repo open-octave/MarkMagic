@@ -684,12 +684,12 @@ video {
   height: 30rem;
 }
 
-.h-full {
-  height: 100%;
+.h-\[37\.5rem\] {
+  height: 37.5rem;
 }
 
-.min-h-\[37\.5rem\] {
-  min-height: 37.5rem;
+.h-full {
+  height: 100%;
 }
 
 .w-1\/2 {

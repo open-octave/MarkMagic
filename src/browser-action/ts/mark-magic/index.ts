@@ -1,8 +1,10 @@
-import { toJira } from "./to-jira";
+// import { toJira } from "./to-jira";
+import { markdownToJira } from "./markdown-to-jira";
 import { toMarkdown } from "./to-markdown";
 
 export const MarkMagic = {
-  toJira,
+  // toJira
+  toJira: markdownToJira,
   toMarkdown,
 };
 

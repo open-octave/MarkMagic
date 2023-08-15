@@ -20867,11 +20867,29 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     return "none";
   }
 
-  // src/browser-action/ts/mark-magic/to-jira.ts
-  function toJira(markdown) {
-    const matchCodeBlockWithSyntaxRegex = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
-    markdown = markdown.replace(
-      matchCodeBlockWithSyntaxRegex,
+  // src/browser-action/ts/mark-magic/markdown-to-jira.ts
+  function markdownToJira(markdown) {
+    const SPECIAL_FORMAT_MAP = {
+      cite: "??",
+      del: "-",
+      ins: "+",
+      sup: "^",
+      sub: "~"
+    };
+    const CODE_BLOCK_SYNTAX_REGEX = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+    const HEADING_REGEX = /^([#]+)(.*?)$/gm;
+    const BOLD_ITALIC_REGEX = /([*_]+)(.*?)\1/g;
+    const LIST_REGEX = /^([ \t]*)-\s(.*)$/gm;
+    const SPECIAL_FORMAT_REGEX = new RegExp(
+      "<(" + Object.keys(SPECIAL_FORMAT_MAP).join("|") + ")>(.*?)</\\1>",
+      "g"
+    );
+    const STRIKETHROUGH_REGEX = /~~(.*?)~~/g;
+    const INLINE_CODE_REGEX = /`([^`]+)`/g;
+    const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const ANGLE_LINK_REGEX = /<([^>]+)>/g;
+    return markdown.replace(
+      CODE_BLOCK_SYNTAX_REGEX,
       (_codeBlock, codeBlockSyntaxType, codeBlockContent) => {
         let code = "{code";
         if (codeBlockSyntaxType) {
@@ -20880,38 +20898,21 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
         code += "}" + codeBlockContent + "{code}";
         return code;
       }
-    );
-    markdown = markdown.replace(/^([#]+)(.*?)$/gm, (_, level, content) => {
-      return "h" + level.length + "." + content;
-    });
-    markdown = markdown.replace(/([*_]+)(.*?)\1/g, (_, wrapper, content) => {
+    ).replace(
+      HEADING_REGEX,
+      (_, level, content) => "h" + level.length + "." + content
+    ).replace(BOLD_ITALIC_REGEX, (_, wrapper, content) => {
       const to = wrapper.length === 1 ? "_" : "*";
       return to + content + to;
-    });
-    markdown = markdown.replace(/^([ \t]*)-\s(.*)$/gm, (_, level, content) => {
-      let depth = Math.floor(level.length / 4 + 1);
+    }).replace(LIST_REGEX, (_, level, content) => {
+      const depth = Math.floor(level.length / 4 + 1);
       return Array(depth + 1).join("*") + " " + content;
-    });
-    const map = {
-      cite: "??",
-      del: "-",
-      ins: "+",
-      sup: "^",
-      sub: "~"
-    };
-    markdown = markdown.replace(
-      new RegExp("<(" + Object.keys(map).join("|") + ")>(.*?)</\\1>", "g"),
-      // regex to match <sup>content</sup> and <sub>content</sub>
+    }).replace(
+      SPECIAL_FORMAT_REGEX,
       (_, from, content) => {
-        const to = map[from];
-        return to + content + to;
+        return SPECIAL_FORMAT_MAP[from] + content + SPECIAL_FORMAT_MAP[from];
       }
-    );
-    markdown = markdown.replace(/~~(.*?)~~/g, "-$1-");
-    markdown = markdown.replace(/`([^`]+)`/g, "{{$1}}");
-    markdown = markdown.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "[$1|$2]");
-    markdown = markdown.replace(/<([^>]+)>/g, "[$1]");
-    return markdown;
+    ).replace(STRIKETHROUGH_REGEX, "-$1-").replace(INLINE_CODE_REGEX, "{{$1}}").replace(LINK_REGEX, "[$1|$2]").replace(ANGLE_LINK_REGEX, "[$1]");
   }
 
   // src/browser-action/ts/mark-magic/to-markdown.ts
@@ -20933,7 +20934,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     });
     jira = jira.replace(/\*(\w[\w|" "]+\w)\*/g, "**$1**");
     jira = jira.replace(/_(\w[\w|" "]+\w)_/g, "*$1*");
-    jira = jira.replace(/\s-(\w[\w|" "]+\w)-\s/g, (match, groupOne) => {
+    jira = jira.replace(/\s-(\w[\w|" "]+\w)-\s/g, (match) => {
       return match.replaceAll("-", "~~");
     });
     jira = jira.replace(/(^\*+\s)(.+)/gm, (match, groupOne, groupTwo) => {
@@ -20944,12 +20945,59 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     jira = jira.replace(/\{\{([^}]+)\}\}/g, "`$1`");
     jira = jira.replace(/\[([^\]]+)\|([^\]]+)\]/g, "[$1]($2)");
     jira = jira.replace(/\[([^\]]+)\]/g, "<$1>");
+    jira = jira.replace(/\|\|/g, "|");
     return jira;
   }
+  var test = `h2. QA
+
+||heading 1||heading 2||heading 3||
+|col A1|col A2|col A3|
+|col B1|col B2|col B3|
+
+{code:javascript}
+  const START = "some-text";
+  const replacementsList: { key: string; value: string }[] = [];
+  let counter = 0;
+{code}
+
+
+* Ensure that there are 3 environments available for testing the form and that they are reading their environment variables correctly
+** dev
+***  {{pnpm --filter lead-widget-service dev}}
+** qa
+*** {{pnpm --filter lead-widget-service build:qa && pnpm --filter lead-widget-service preview}}
+** production
+*** {{pnpm --filter lead-widget-service build && pnpm --filter lead-widget-service preview}}
+* Ensure that the form can be opened and closed
+** Form Closing Conditions
+*** User clicks the close button
+*** User clicks outside of the form
+* Ensure that if the grins agent is selected for the referrer field the form conditionally displays the active agents from the agent service request {{/agents/names}} for the user to select from
+
+-strike me-
+
+_italic me_
+
+*bold me*
+
+{code:python}
+  START = "some-python-text"
+  replacementsList = []
+  counter = 0
+{code}
+
+
+{code:none}
+  START = "some-unknownSytax-text"
+  replacementsList = []
+  counter = 0
+{code}`;
+  console.log(toMarkdown(test));
 
   // src/browser-action/ts/mark-magic/index.ts
   var MarkMagic = {
-    toJira,
+    // toJira
+    toJira: markdownToJira,
     toMarkdown
   };
 
