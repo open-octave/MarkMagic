@@ -5,7 +5,7 @@ import "brace/theme/twilight";
 
 import { MarkMagic } from "./mark-magic";
 
-import { marked } from "marked";
+import MarkdownIt from "markdown-it";
 
 const markdownEditor = ace.edit("markdown-editor");
 const markdownPreview = document.getElementById("markdown-preview");
@@ -295,16 +295,21 @@ shadow.appendChild(style);
 const body = document.createElement("body");
 shadow.appendChild(body);
 
-function updatePreview() {
+function updateMarkdownPreview() {
   const markdown = markdownEditor.getValue();
-  const html = marked(markdown);
-  body.innerHTML = html;
+  const md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+  });
+
+  body.innerHTML = md.render(markdown);
 }
 
-markdownEditor.on("change", updatePreview);
+markdownEditor.on("change", updateMarkdownPreview);
 
 // TODO matt: remove this
-updatePreview();
+updateMarkdownPreview();
 setJira();
 
 // ==========================

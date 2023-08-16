@@ -30,11 +30,13 @@ export function markdownToJira(markdown: string): string {
   const LINK_REGEX = /\[(.*)\]\(([^)]+)\)/g;
   const ANGLE_LINK_REGEX = /<([^>]+)>/g;
   const HORIZONTAL_RULE_REGEX = /^(?:___|---|\*\*\*)$/gm;
+  const BLOCK_QUOTE_REGEX = /^>[\s>|>]* (.*)$/gm;
 
   const jira = markdown
     .replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock)
     .replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock)
     .replace(HORIZONTAL_RULE_REGEX, "----")
+    .replace(BLOCK_QUOTE_REGEX, "{quote}$1{quote}")
     .replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
