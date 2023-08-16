@@ -1,3 +1,4 @@
+import sanitizeHtml from "sanitize-html";
 import { getSupportedName } from "./utils";
 
 /**
@@ -28,10 +29,12 @@ export function markdownToJira(markdown: string): string {
   const INLINE_CODE_REGEX = /`([^`]+)`/g;
   const LINK_REGEX = /\[(.*)\]\(([^)]+)\)/g;
   const ANGLE_LINK_REGEX = /<([^>]+)>/g;
+  const HORIZONTAL_RULE_REGEX = /^(?:___|---|\*\*\*)$/gm;
 
   const jira = markdown
     .replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock)
     .replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock)
+    .replace(HORIZONTAL_RULE_REGEX, "----")
     .replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
@@ -81,6 +84,9 @@ export function replaceSingleLineCodeBlock(
 }
 
 export function replaceLinks(_link: string, linkText: string, linkUrl: string) {
-  const cleansedLinkText = linkText.replaceAll("[", "").replaceAll("]", "");
+  let cleansedLinkText = linkText.replaceAll("[", "").replaceAll("]", "");
+
+  cleansedLinkText = sanitizeHtml(cleansedLinkText);
+
   return `[${cleansedLinkText}|${linkUrl}]`;
 }

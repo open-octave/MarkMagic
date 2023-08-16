@@ -9,7 +9,6 @@ export function jiraToHtml(jira: string): string {
   const HEADING_REGEX = /^h([1-6])\.(.*?)$/gm;
   const BOLD_REGEX = /\*(.*?)\*/g;
   const ITALIC_REGEX = /_(.*?)_/g;
-  // const LIST_ITEM_REGEX = /^(\**)\s(.*)$/gm;
   const LIST_CONTAINER_REGEX = /^(\d.\s.*(?:\n\d.\s.*)*)/gm;
   const LIST_ITEM_REGEX = /^\d.\s(.*$)/gm;
   const SPECIAL_FORMAT_MAP = {
@@ -30,6 +29,7 @@ export function jiraToHtml(jira: string): string {
   const STRIKETHROUGH_REGEX = /-(.*?)-/g;
   const INLINE_CODE_REGEX = /\{\{\{color:(#[a-zA-Z0-9_]*)\}(.*?)\{color\}\}\}/g;
   const LINK_REGEX = /\[(.*?)(?:\|(.*?))?\]/g;
+  const HORIZONTAL_RULE_REGEX = /^----$/gm;
 
   const html = jira
     .replace(CODE_BLOCK_SYNTAX_REGEX, (_match, lang, codeContent) => {
@@ -42,6 +42,7 @@ export function jiraToHtml(jira: string): string {
       HEADING_REGEX,
       (_match, level, content) => `<h${level}>${content}</h${level}>`
     )
+    .replace(HORIZONTAL_RULE_REGEX, "<hr>")
     .replace(BOLD_REGEX, "<strong>$1</strong>")
     .replace(ITALIC_REGEX, "<em>$1</em>")
     .replace(LIST_CONTAINER_REGEX, (_match, content) => {
