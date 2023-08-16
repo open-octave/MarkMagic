@@ -16,7 +16,8 @@ export function markdownToJira(markdown: string): string {
     sub: "~",
   };
 
-  const MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+  const MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX =
+    /`{3,}\s?(\w+)?\n((?:\n|.)+?)`{3,}/g;
   const SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX = /`([^`]+)`/g;
   const HEADING_REGEX = /^([#]+)(.*?)$/gm;
   const BOLD_ITALIC_REGEX = /([*_]+)(.*?)\1/g;
@@ -36,7 +37,7 @@ export function markdownToJira(markdown: string): string {
     .replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock)
     .replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock)
     .replace(HORIZONTAL_RULE_REGEX, "----")
-    .replace(BLOCK_QUOTE_REGEX, "{quote}$1{quote}")
+    .replace(BLOCK_QUOTE_REGEX, "{quote}\n$1\n{quote}\n")
     .replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
@@ -73,7 +74,7 @@ export function replaceMultiLineCodeBlock(
   if (codeBlockSyntaxType) {
     code += ":" + getSupportedName(codeBlockSyntaxType);
   }
-  code += "}" + codeBlockContent + "{code}";
+  code += "}\n" + codeBlockContent + "{code}\n";
 
   return code;
 }
