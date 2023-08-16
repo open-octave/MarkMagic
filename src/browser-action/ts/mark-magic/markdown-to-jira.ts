@@ -15,7 +15,8 @@ export function markdownToJira(markdown: string): string {
     sub: "~",
   };
 
-  const CODE_BLOCK_SYNTAX_REGEX = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+  const MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+  const SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX = /`([^`]+)`/g;
   const HEADING_REGEX = /^([#]+)(.*?)$/gm;
   const BOLD_ITALIC_REGEX = /([*_]+)(.*?)\1/g;
   const LIST_REGEX = /^([ \t]*)-\s(.*)$/gm;
@@ -28,18 +29,9 @@ export function markdownToJira(markdown: string): string {
   const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
   const ANGLE_LINK_REGEX = /<([^>]+)>/g;
 
-  return markdown
-    .replace(
-      CODE_BLOCK_SYNTAX_REGEX,
-      (_codeBlock, codeBlockSyntaxType, codeBlockContent) => {
-        let code = "{code";
-        if (codeBlockSyntaxType) {
-          code += ":" + getSupportedName(codeBlockSyntaxType);
-        }
-        code += "}" + codeBlockContent + "{code}";
-        return code;
-      }
-    )
+  const jira = markdown
+    .replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock)
+    .replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock)
     .replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
@@ -60,6 +52,38 @@ export function markdownToJira(markdown: string): string {
     )
     .replace(STRIKETHROUGH_REGEX, "-$1-")
     .replace(INLINE_CODE_REGEX, "{{$1}}")
-    .replace(LINK_REGEX, "[$1|$2]")
+    .replace(LINK_REGEX, replaceLinks)
     .replace(ANGLE_LINK_REGEX, "[$1]");
+
+  return jira;
+}
+
+export function replaceMultiLineCodeBlock(
+  _codeBlock: string,
+  codeBlockSyntaxType: string,
+  codeBlockContent: string
+) {
+  let code = "{code";
+
+  if (codeBlockSyntaxType) {
+    code += ":" + getSupportedName(codeBlockSyntaxType);
+  }
+  code += "}" + codeBlockContent + "{code}";
+
+  return code;
+}
+
+export function replaceSingleLineCodeBlock(
+  _codeBlock: string,
+  codeBlockContent: string
+) {
+  return `{{${codeBlockContent}}}`;
+}
+
+export function replaceLinks(_link: string, linkText: string, linkUrl: string) {
+  console.log({
+    linkText,
+    linkUrl,
+  });
+  return `[${linkText}|${linkUrl}]`;
 }

@@ -7,9 +7,11 @@ import { MarkMagic } from "./mark-magic";
 
 import { marked } from "marked";
 
-const jiraEditor = ace.edit("jira-editor");
 const markdownEditor = ace.edit("markdown-editor");
 const markdownPreview = document.getElementById("markdown-preview");
+
+const jiraEditor = ace.edit("jira-editor");
+const jiraPreview = document.getElementById("jira-preview");
 
 // ============================
 //       Markdown Editor
@@ -98,3 +100,34 @@ jiraEditor.on("focus", function () {
 jiraEditor.on("blur", function () {
   jiraEditor.off("change", setMarkdown);
 });
+
+// ==========================
+//      Jira Preview
+// ==========================
+if (!jiraPreview) {
+  throw new Error("Jira preview element not found");
+}
+
+const jiraShadow = jiraPreview.attachShadow({ mode: "open" });
+
+const jiraStyle = document.createElement("style");
+jiraStyle.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+jiraShadow.appendChild(jiraStyle);
+
+const jiraBody = document.createElement("body");
+jiraShadow.appendChild(jiraBody);
+
+function updateJiraPreview() {
+  const jira = jiraEditor.getValue();
+  const html = MarkMagic.jiraToHtml(jira);
+  jiraBody.innerHTML = html;
+}
+
+jiraEditor.on("change", updateJiraPreview);
+
+// TODO matt: remove this
+updateJiraPreview();

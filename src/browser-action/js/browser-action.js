@@ -20684,6 +20684,52 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     dom.importCssString(exports.cssText, exports.cssClass);
   });
 
+  // src/browser-action/ts/mark-magic/jira-to-html.ts
+  function jiraToHtml(jira) {
+    const CODE_BLOCK_SYNTAX_REGEX = /\{code:(\w+)?\}((?:\n|.)+?)\{code\}/g;
+    const HEADING_REGEX = /^h([1-6])\.(.*?)$/gm;
+    const BOLD_REGEX = /\*(.*?)\*/g;
+    const ITALIC_REGEX = /_(.*?)_/g;
+    const LIST_REGEX = /^(\**)\s(.*)$/gm;
+    const SPECIAL_FORMAT_MAP = {
+      "??": "cite",
+      "-": "del",
+      "+": "ins",
+      "^": "sup",
+      "~": "sub"
+    };
+    const SPECIAL_FORMAT_REGEX = new RegExp(
+      "(" + Object.keys(SPECIAL_FORMAT_MAP).map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")(.*?)\\1",
+      "g"
+    );
+    const STRIKETHROUGH_REGEX = /-(.*?)-/g;
+    const INLINE_CODE_REGEX = /\{\{(.*?)\}\}/g;
+    const LINK_REGEX = /\[(.*?)(?:\|(.*?))?\]/g;
+    return jira.replace(CODE_BLOCK_SYNTAX_REGEX, (match, lang, codeContent) => {
+      if (lang) {
+        return `<pre><code class="${lang}">${codeContent}</code></pre>`;
+      }
+      return `<pre><code>${codeContent}</code></pre>`;
+    }).replace(
+      HEADING_REGEX,
+      (match, level, content) => `<h${level}>${content}</h${level}>`
+    ).replace(BOLD_REGEX, "<strong>$1</strong>").replace(ITALIC_REGEX, "<em>$1</em>").replace(LIST_REGEX, (match, stars, content) => {
+      const depth = stars.length;
+      return "<li>" + content + "</li>".padStart(depth * 4 + 4, " ");
+    }).replace(
+      SPECIAL_FORMAT_REGEX,
+      (_match, format, content) => {
+        const tag = SPECIAL_FORMAT_MAP[format];
+        return `<${tag}>${content}</${tag}>`;
+      }
+    ).replace(STRIKETHROUGH_REGEX, "<del>$1</del>").replace(INLINE_CODE_REGEX, "<code>$1</code>").replace(LINK_REGEX, (_match, textOrUrl, url) => {
+      if (url) {
+        return `<a href="${url}">${textOrUrl}</a>`;
+      }
+      return `<a href="${textOrUrl}">${textOrUrl}</a>`;
+    });
+  }
+
   // src/browser-action/ts/mark-magic/utils.ts
   var codeBlockSupportedLanguages = {
     ActionScript: {
@@ -20881,7 +20927,8 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
       sup: "^",
       sub: "~"
     };
-    const CODE_BLOCK_SYNTAX_REGEX = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+    const MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX = /`{3,}(\w+)?((?:\n|.)+?)`{3,}/g;
+    const SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX = /`([^`]+)`/g;
     const HEADING_REGEX = /^([#]+)(.*?)$/gm;
     const BOLD_ITALIC_REGEX = /([*_]+)(.*?)\1/g;
     const LIST_REGEX = /^([ \t]*)-\s(.*)$/gm;
@@ -20893,17 +20940,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     const INLINE_CODE_REGEX = /`([^`]+)`/g;
     const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
     const ANGLE_LINK_REGEX = /<([^>]+)>/g;
-    return markdown.replace(
-      CODE_BLOCK_SYNTAX_REGEX,
-      (_codeBlock, codeBlockSyntaxType, codeBlockContent) => {
-        let code = "{code";
-        if (codeBlockSyntaxType) {
-          code += ":" + getSupportedName(codeBlockSyntaxType);
-        }
-        code += "}" + codeBlockContent + "{code}";
-        return code;
-      }
-    ).replace(
+    const jira = markdown.replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock).replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock).replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
     ).replace(BOLD_ITALIC_REGEX, (_, wrapper, content) => {
@@ -20917,7 +20954,26 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
       (_, from, content) => {
         return SPECIAL_FORMAT_MAP[from] + content + SPECIAL_FORMAT_MAP[from];
       }
-    ).replace(STRIKETHROUGH_REGEX, "-$1-").replace(INLINE_CODE_REGEX, "{{$1}}").replace(LINK_REGEX, "[$1|$2]").replace(ANGLE_LINK_REGEX, "[$1]");
+    ).replace(STRIKETHROUGH_REGEX, "-$1-").replace(INLINE_CODE_REGEX, "{{$1}}").replace(LINK_REGEX, replaceLinks).replace(ANGLE_LINK_REGEX, "[$1]");
+    return jira;
+  }
+  function replaceMultiLineCodeBlock(_codeBlock, codeBlockSyntaxType, codeBlockContent) {
+    let code = "{code";
+    if (codeBlockSyntaxType) {
+      code += ":" + getSupportedName(codeBlockSyntaxType);
+    }
+    code += "}" + codeBlockContent + "{code}";
+    return code;
+  }
+  function replaceSingleLineCodeBlock(_codeBlock, codeBlockContent) {
+    return `{{${codeBlockContent}}}`;
+  }
+  function replaceLinks(_link, linkText, linkUrl) {
+    console.log({
+      linkText,
+      linkUrl
+    });
+    return `[${linkText}|${linkUrl}]`;
   }
 
   // src/browser-action/ts/mark-magic/to-markdown.ts
@@ -20956,9 +21012,9 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
 
   // src/browser-action/ts/mark-magic/index.ts
   var MarkMagic = {
-    // toJira
     toJira: markdownToJira,
-    toMarkdown
+    toMarkdown,
+    jiraToHtml
   };
 
   // node_modules/.pnpm/marked@7.0.3/node_modules/marked/lib/marked.esm.js
@@ -23138,9 +23194,10 @@ ${content}</tr>
   var lexer = _Lexer.lex;
 
   // src/browser-action/ts/main.ts
-  var jiraEditor = ace2.edit("jira-editor");
   var markdownEditor = ace2.edit("markdown-editor");
   var markdownPreview = document.getElementById("markdown-preview");
+  var jiraEditor = ace2.edit("jira-editor");
+  var jiraPreview = document.getElementById("jira-preview");
   markdownEditor.$blockScrolling = Infinity;
   markdownEditor.getSession().setMode("ace/mode/markdown");
   markdownEditor.setTheme("ace/theme/twilight");
@@ -23197,5 +23254,25 @@ ${content}</tr>
   jiraEditor.on("blur", function() {
     jiraEditor.off("change", setMarkdown);
   });
+  if (!jiraPreview) {
+    throw new Error("Jira preview element not found");
+  }
+  var jiraShadow = jiraPreview.attachShadow({ mode: "open" });
+  var jiraStyle = document.createElement("style");
+  jiraStyle.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+  jiraShadow.appendChild(jiraStyle);
+  var jiraBody = document.createElement("body");
+  jiraShadow.appendChild(jiraBody);
+  function updateJiraPreview() {
+    const jira = jiraEditor.getValue();
+    const html = MarkMagic.jiraToHtml(jira);
+    jiraBody.innerHTML = html;
+  }
+  jiraEditor.on("change", updateJiraPreview);
+  updateJiraPreview();
 })();
 //# sourceMappingURL=browser-action.js.map
