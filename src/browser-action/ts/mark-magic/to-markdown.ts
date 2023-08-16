@@ -143,5 +143,3 @@ _italic me_
   replacementsList = []
   counter = 0
 {code}`;
-
-console.log(toMarkdown(test));

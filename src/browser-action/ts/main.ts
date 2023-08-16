@@ -5,15 +5,33 @@ import "brace/theme/twilight";
 
 import { MarkMagic } from "./mark-magic";
 
+import { marked } from "marked";
+
+const jiraEditor = ace.edit("jira-editor");
+const markdownEditor = ace.edit("markdown-editor");
+const markdownPreview = document.getElementById("markdown-preview");
+
 // ============================
 //       Markdown Editor
 // ============================
 
-const markdownEditor = ace.edit("markdown-editor");
 markdownEditor.$blockScrolling = Infinity;
 
 markdownEditor.getSession().setMode("ace/mode/markdown");
 markdownEditor.setTheme("ace/theme/twilight");
+
+// TODO matt: remove this
+markdownEditor.setValue(`### Prerequisite Steps
+
+1. If you have not already, create a local database for \`ams_policy_service_dev\` and populate your \`.env.development.local\` file with the correct connection information. By default, the password and username will be the same as the other local database used for the other services.
+
+### Case: Run the migrations and ensure the tables are created
+
+1. Local run \`pnpm --filter ams-policy-service db:migrate:latest\`
+2. Verify that all of the tables mentioned in the [[Policy Service] Policy Schema](https://lucid.app/lucidchart/3be5aae3-7472-4bd9-82bd-6298c93eff1c/edit?invitationId=inv_4f44e205-8364-481f-950c-06957cff8394&page=Tpy1WWJnyO2U#) are created in the \`ams_policy_service_dev\` database.
+3. Verify that the tables have the correct columns, data types, foreign keys, and T2 columns where applicable.`);
+
+// ------
 
 function setJira() {
   const jira = MarkMagic.toJira(markdownEditor.getValue());
@@ -27,11 +45,43 @@ markdownEditor.on("blur", function () {
   markdownEditor.off("change", setJira);
 });
 
+// ============================
+//       Markdown Preview
+// ============================
+
+if (!markdownPreview) {
+  throw new Error("Markdown preview element not found");
+}
+
+const shadow = markdownPreview.attachShadow({ mode: "open" });
+
+const style = document.createElement("style");
+style.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+shadow.appendChild(style);
+
+const body = document.createElement("body");
+shadow.appendChild(body);
+
+function updatePreview() {
+  const markdown = markdownEditor.getValue();
+  const html = marked(markdown);
+  body.innerHTML = html;
+}
+
+markdownEditor.on("change", updatePreview);
+
+// TODO matt: remove this
+updatePreview();
+setJira();
+
 // ==========================
 //      Jira Editor
 // ==========================
 
-const jiraEditor = ace.edit("jira-editor");
 jiraEditor.$blockScrolling = Infinity;
 
 jiraEditor.session.setMode("ace/mode/markdown");

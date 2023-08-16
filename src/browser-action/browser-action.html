@@ -1,8 +1,14 @@
 <script type="text/javascript" src="./js/browser-action.js" defer></script>
 <link rel="stylesheet" href="../css/styles.css" />
 
-<body class="w-[50rem] h-[37.5rem] overflow-hidden p-2 bg-slate-900">
+<!-- 
+---- Extension Container
+-->
+<body class="w-[50rem] h-[50rem] overflow-hidden p-2 bg-slate-900">
   <main class="p-3 bg-slate-800 text-slate-400 rounded-md h-full">
+    <!-- 
+    ---- Header Container
+    -->
     <nav class="flex items-center justify-between">
       <div class="">
         <h1 class="text-3xl text-white font-semibold">MarkMagic</h1>
@@ -28,16 +34,58 @@
         >
       </div>
     </nav>
+
     <hr class="mt-1 mb-3 border-slate-600" />
-    <div class="w-full flex justify-between gap-3 text-white">
-      <div class="w-1/2">
-        <h2 class="text-sm font-semibold mb-2">Markdown</h2>
-        <div id="markdown-editor" class="w-full h-[30rem]"></div>
-      </div>
-      <div class="w-1/2">
-        <h2 class="text-sm font-semibold mb-2">Jira</h2>
-        <div id="jira-editor" class="w-full h-[30rem]"></div>
-      </div>
+
+    <!-- 
+    ---- Main Content Container
+    -->
+    <div class="w-full flex flex-col gap-10 text-white">
+      <!-- 
+      ---- Markdown Row Container
+      -->
+      <section class="w-full h-[20rem] flex justify-between gap-3">
+        <!-- 
+        ---- Markdown Input
+        -->
+        <div class="w-1/2 h-full">
+          <h2 class="text-sm font-semibold mb-2">Markdown</h2>
+          <div id="markdown-editor" class="w-full h-full"></div>
+        </div>
+        <!-- 
+        ---- Markdown Preview
+        -->
+        <div class="w-1/2 h-full">
+          <h2 class="text-sm font-semibold mb-2">Preview</h2>
+          <div
+            id="markdown-preview"
+            class="w-full h-full bg-gray-200 text-black"
+          ></div>
+        </div>
+      </section>
+
+      <!-- 
+      ---- Jira Row Container
+      -->
+      <section class="w-full h-[20rem] flex justify-between gap-3">
+        <!-- 
+        ---- Jira Input
+        -->
+        <div class="w-1/2 h-full">
+          <h2 class="text-sm font-semibold mb-2">Jira Markup</h2>
+          <div id="jira-editor" class="w-full h-full"></div>
+        </div>
+        <!-- 
+        ---- Jira Preview
+        -->
+        <div class="w-1/2 h-full">
+          <h2 class="text-sm font-semibold mb-2">Preview</h2>
+          <div
+            id="jira-preview"
+            class="w-full h-full bg-gray-200 text-black"
+          ></div>
+        </div>
+      </section>
     </div>
   </main>
 </body>
