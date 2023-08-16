@@ -26,7 +26,7 @@ export function markdownToJira(markdown: string): string {
   );
   const STRIKETHROUGH_REGEX = /~~(.*?)~~/g;
   const INLINE_CODE_REGEX = /`([^`]+)`/g;
-  const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const LINK_REGEX = /\[(.*)\]\(([^)]+)\)/g;
   const ANGLE_LINK_REGEX = /<([^>]+)>/g;
 
   const jira = markdown
@@ -77,13 +77,10 @@ export function replaceSingleLineCodeBlock(
   _codeBlock: string,
   codeBlockContent: string
 ) {
-  return `{{${codeBlockContent}}}`;
+  return `{{{color:#ff8b00}${codeBlockContent}{color}}}`;
 }
 
 export function replaceLinks(_link: string, linkText: string, linkUrl: string) {
-  console.log({
-    linkText,
-    linkUrl,
-  });
-  return `[${linkText}|${linkUrl}]`;
+  const cleansedLinkText = linkText.replaceAll("[", "").replaceAll("]", "");
+  return `[${cleansedLinkText}|${linkUrl}]`;
 }

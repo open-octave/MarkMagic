@@ -20938,7 +20938,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     );
     const STRIKETHROUGH_REGEX = /~~(.*?)~~/g;
     const INLINE_CODE_REGEX = /`([^`]+)`/g;
-    const LINK_REGEX = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const LINK_REGEX = /\[(.*)\]\(([^)]+)\)/g;
     const ANGLE_LINK_REGEX = /<([^>]+)>/g;
     const jira = markdown.replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock).replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock).replace(
       HEADING_REGEX,
@@ -20966,14 +20966,11 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
     return code;
   }
   function replaceSingleLineCodeBlock(_codeBlock, codeBlockContent) {
-    return `{{${codeBlockContent}}}`;
+    return `{{{color:#ff8b00}${codeBlockContent}{color}}}`;
   }
   function replaceLinks(_link, linkText, linkUrl) {
-    console.log({
-      linkText,
-      linkUrl
-    });
-    return `[${linkText}|${linkUrl}]`;
+    const cleansedLinkText = linkText.replaceAll("[", "").replaceAll("]", "");
+    return `[${cleansedLinkText}|${linkUrl}]`;
   }
 
   // src/browser-action/ts/mark-magic/to-markdown.ts
