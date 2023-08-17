@@ -33,7 +33,7 @@ export function markdownToJira(markdown: string): string {
   const HORIZONTAL_RULE_REGEX = /^(?:___|---|\*\*\*)$/gm;
   const BLOCK_QUOTE_REGEX = /^>[\s>|>]* (.*)$/gm;
 
-  const jira = markdown
+  let jira = markdown
     .replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock)
     .replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock)
     .replace(HORIZONTAL_RULE_REGEX, "----")
@@ -60,6 +60,19 @@ export function markdownToJira(markdown: string): string {
     .replace(INLINE_CODE_REGEX, "{{$1}}")
     .replace(LINK_REGEX, replaceLinks)
     .replace(ANGLE_LINK_REGEX, "[$1]");
+
+  // Replace markdown headers
+  const jiraAsArray = jira.split("\n");
+  const markdownDividerElementIndexes: number[] = [];
+
+  jiraAsArray.forEach((line, index) => {
+    if (line.startsWith("| -")) {
+      jiraAsArray[index - 1] = jiraAsArray[index - 1].replaceAll("|", "||");
+      jiraAsArray.splice(index, 1);
+    }
+  });
+
+  jira = jiraAsArray.join("\n");
 
   return jira;
 }

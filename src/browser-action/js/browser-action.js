@@ -34920,7 +34920,7 @@ and ensure you are accounting for this risk.
     const ANGLE_LINK_REGEX = /<([^>]+)>/g;
     const HORIZONTAL_RULE_REGEX = /^(?:___|---|\*\*\*)$/gm;
     const BLOCK_QUOTE_REGEX = /^>[\s>|>]* (.*)$/gm;
-    const jira = markdown.replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock).replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock).replace(HORIZONTAL_RULE_REGEX, "----").replace(BLOCK_QUOTE_REGEX, "{quote}\n$1\n{quote}\n").replace(
+    let jira = markdown.replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock).replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock).replace(HORIZONTAL_RULE_REGEX, "----").replace(BLOCK_QUOTE_REGEX, "{quote}\n$1\n{quote}\n").replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
     ).replace(BOLD_ITALIC_REGEX, (_, wrapper, content) => {
@@ -34935,6 +34935,15 @@ and ensure you are accounting for this risk.
         return SPECIAL_FORMAT_MAP[from] + content + SPECIAL_FORMAT_MAP[from];
       }
     ).replace(STRIKETHROUGH_REGEX, "-$1-").replace(INLINE_CODE_REGEX, "{{$1}}").replace(LINK_REGEX, replaceLinks).replace(ANGLE_LINK_REGEX, "[$1]");
+    const jiraAsArray = jira.split("\n");
+    const markdownDividerElementIndexes = [];
+    jiraAsArray.forEach((line, index) => {
+      if (line.startsWith("| -")) {
+        jiraAsArray[index - 1] = jiraAsArray[index - 1].replaceAll("|", "||");
+        jiraAsArray.splice(index, 1);
+      }
+    });
+    jira = jiraAsArray.join("\n");
     return jira;
   }
   function replaceMultiLineCodeBlock(_codeBlock, codeBlockSyntaxType, codeBlockContent) {
