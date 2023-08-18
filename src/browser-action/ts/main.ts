@@ -24,8 +24,112 @@ markdownEditor.setFontSize("10");
 markdownEditor.getSession().setMode("ace/mode/markdown");
 markdownEditor.setTheme("ace/theme/twilight");
 
-// TODO matt: remove this
-markdownEditor.setValue(`
+// ------
+
+function setJira() {
+  const jira = MarkMagic.toJira(markdownEditor.getValue());
+  jiraEditor.setValue(jira);
+}
+
+markdownEditor.on("focus", function () {
+  markdownEditor.on("change", setJira);
+});
+markdownEditor.on("blur", function () {
+  markdownEditor.off("change", setJira);
+});
+
+// ============================
+//       Markdown Preview
+// ============================
+
+if (!markdownPreview) {
+  throw new Error("Markdown preview element not found");
+}
+
+const shadow = markdownPreview.attachShadow({ mode: "open" });
+
+const style = document.createElement("style");
+style.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+shadow.appendChild(style);
+
+const body = document.createElement("body");
+shadow.appendChild(body);
+
+function updateMarkdownPreview() {
+  const markdown = markdownEditor.getValue();
+  const md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+  });
+
+  body.innerHTML = md.render(markdown);
+}
+
+markdownEditor.on("change", updateMarkdownPreview);
+
+// ==========================
+//      Jira Editor
+// ==========================
+
+jiraEditor.$blockScrolling = Infinity;
+
+jiraEditor.getSession().setUseWrapMode(true);
+jiraEditor.setFontSize("10");
+jiraEditor.session.setMode("ace/mode/markdown");
+jiraEditor.setTheme("ace/theme/twilight");
+jiraEditor.setReadOnly(true);
+
+// function setMarkdown() {
+//   const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
+//   markdownEditor.setValue(markdown);
+// }
+
+// jiraEditor.on("focus", function () {
+//   jiraEditor.on("change", setMarkdown);
+// });
+// jiraEditor.on("blur", function () {
+//   jiraEditor.off("change", setMarkdown);
+// });
+
+// ==========================
+//      Jira Preview
+// ==========================
+if (!jiraPreview) {
+  throw new Error("Jira preview element not found");
+}
+
+const jiraShadow = jiraPreview.attachShadow({ mode: "open" });
+
+const jiraStyle = document.createElement("style");
+jiraStyle.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+jiraShadow.appendChild(jiraStyle);
+
+const jiraBody = document.createElement("body");
+jiraShadow.appendChild(jiraBody);
+
+function updateJiraPreview() {
+  const jira = jiraEditor.getValue();
+  const html = MarkMagic.jiraToHtml(jira);
+  jiraBody.innerHTML = html;
+}
+
+jiraEditor.on("change", updateJiraPreview);
+
+// ==========================
+//      Test Data
+// ==========================
+function test() {
+  // TODO matt: remove this
+  markdownEditor.setValue(`
 # h1 Heading 8-)
 ## h2 Heading
 ### h3 Heading
@@ -158,109 +262,12 @@ The killer feature of \`markdown-it\` is very effective support of
 *here be dragons*
 :::`);
 
-// ------
+  // TODO matt: remove this
+  updateMarkdownPreview();
+  setJira();
 
-function setJira() {
-  const jira = MarkMagic.toJira(markdownEditor.getValue());
-  jiraEditor.setValue(jira);
+  // TODO matt: remove this
+  updateJiraPreview();
 }
 
-markdownEditor.on("focus", function () {
-  markdownEditor.on("change", setJira);
-});
-markdownEditor.on("blur", function () {
-  markdownEditor.off("change", setJira);
-});
-
-// ============================
-//       Markdown Preview
-// ============================
-
-if (!markdownPreview) {
-  throw new Error("Markdown preview element not found");
-}
-
-const shadow = markdownPreview.attachShadow({ mode: "open" });
-
-const style = document.createElement("style");
-style.textContent = `
-  body {
-    font-size: 60%;
-  }
-`;
-shadow.appendChild(style);
-
-const body = document.createElement("body");
-shadow.appendChild(body);
-
-function updateMarkdownPreview() {
-  const markdown = markdownEditor.getValue();
-  const md = new MarkdownIt({
-    html: true,
-    linkify: true,
-    typographer: true,
-  });
-
-  body.innerHTML = md.render(markdown);
-}
-
-markdownEditor.on("change", updateMarkdownPreview);
-
-// TODO matt: remove this
-updateMarkdownPreview();
-setJira();
-
-// ==========================
-//      Jira Editor
-// ==========================
-
-jiraEditor.$blockScrolling = Infinity;
-
-jiraEditor.getSession().setUseWrapMode(true);
-jiraEditor.setFontSize("10");
-jiraEditor.session.setMode("ace/mode/markdown");
-jiraEditor.setTheme("ace/theme/twilight");
-jiraEditor.setReadOnly(true);
-
-// function setMarkdown() {
-//   const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
-//   markdownEditor.setValue(markdown);
-// }
-
-// jiraEditor.on("focus", function () {
-//   jiraEditor.on("change", setMarkdown);
-// });
-// jiraEditor.on("blur", function () {
-//   jiraEditor.off("change", setMarkdown);
-// });
-
-// ==========================
-//      Jira Preview
-// ==========================
-if (!jiraPreview) {
-  throw new Error("Jira preview element not found");
-}
-
-const jiraShadow = jiraPreview.attachShadow({ mode: "open" });
-
-const jiraStyle = document.createElement("style");
-jiraStyle.textContent = `
-  body {
-    font-size: 60%;
-  }
-`;
-jiraShadow.appendChild(jiraStyle);
-
-const jiraBody = document.createElement("body");
-jiraShadow.appendChild(jiraBody);
-
-function updateJiraPreview() {
-  const jira = jiraEditor.getValue();
-  const html = MarkMagic.jiraToHtml(jira);
-  jiraBody.innerHTML = html;
-}
-
-jiraEditor.on("change", updateJiraPreview);
-
-// TODO matt: remove this
-updateJiraPreview();
+test();

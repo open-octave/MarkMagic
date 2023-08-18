@@ -21123,17 +21123,17 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.findAll = exports.existsOne = exports.findOne = exports.findOneChild = exports.find = exports.filter = void 0;
       var domhandler_1 = require_lib2();
-      function filter(test, node, recurse, limit) {
+      function filter(test2, node, recurse, limit) {
         if (recurse === void 0) {
           recurse = true;
         }
         if (limit === void 0) {
           limit = Infinity;
         }
-        return find(test, Array.isArray(node) ? node : [node], recurse, limit);
+        return find(test2, Array.isArray(node) ? node : [node], recurse, limit);
       }
       exports.filter = filter;
-      function find(test, nodes, recurse, limit) {
+      function find(test2, nodes, recurse, limit) {
         var result = [];
         var nodeStack = [nodes];
         var indexStack = [0];
@@ -21147,7 +21147,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
             continue;
           }
           var elem = nodeStack[0][indexStack[0]++];
-          if (test(elem)) {
+          if (test2(elem)) {
             result.push(elem);
             if (--limit <= 0)
               return result;
@@ -21159,11 +21159,11 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
         }
       }
       exports.find = find;
-      function findOneChild(test, nodes) {
-        return nodes.find(test);
+      function findOneChild(test2, nodes) {
+        return nodes.find(test2);
       }
       exports.findOneChild = findOneChild;
-      function findOne(test, nodes, recurse) {
+      function findOne(test2, nodes, recurse) {
         if (recurse === void 0) {
           recurse = true;
         }
@@ -21172,22 +21172,22 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
           var node = nodes[i];
           if (!(0, domhandler_1.isTag)(node)) {
             continue;
-          } else if (test(node)) {
+          } else if (test2(node)) {
             elem = node;
           } else if (recurse && node.children.length > 0) {
-            elem = findOne(test, node.children, true);
+            elem = findOne(test2, node.children, true);
           }
         }
         return elem;
       }
       exports.findOne = findOne;
-      function existsOne(test, nodes) {
+      function existsOne(test2, nodes) {
         return nodes.some(function(checked) {
-          return (0, domhandler_1.isTag)(checked) && (test(checked) || existsOne(test, checked.children));
+          return (0, domhandler_1.isTag)(checked) && (test2(checked) || existsOne(test2, checked.children));
         });
       }
       exports.existsOne = existsOne;
-      function findAll(test, nodes) {
+      function findAll(test2, nodes) {
         var result = [];
         var nodeStack = [nodes];
         var indexStack = [0];
@@ -21203,7 +21203,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
           var elem = nodeStack[0][indexStack[0]++];
           if (!(0, domhandler_1.isTag)(elem))
             continue;
-          if (test(elem))
+          if (test2(elem))
             result.push(elem);
           if (elem.children.length > 0) {
             indexStack.unshift(0);
@@ -21280,16 +21280,16 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
         return funcs.length === 0 ? null : funcs.reduce(combineFuncs);
       }
       function testElement(options, node) {
-        var test = compileTest(options);
-        return test ? test(node) : true;
+        var test2 = compileTest(options);
+        return test2 ? test2(node) : true;
       }
       exports.testElement = testElement;
       function getElements(options, nodes, recurse, limit) {
         if (limit === void 0) {
           limit = Infinity;
         }
-        var test = compileTest(options);
-        return test ? (0, querying_js_1.filter)(test, nodes, recurse, limit) : [];
+        var test2 = compileTest(options);
+        return test2 ? (0, querying_js_1.filter)(test2, nodes, recurse, limit) : [];
       }
       exports.getElements = getElements;
       function getElementById(id, nodes, recurse) {
@@ -31244,7 +31244,7 @@ and ensure you are accounting for this risk.
         this.__opts__ = assign(this.__opts__, options);
         return this;
       };
-      LinkifyIt.prototype.test = function test(text) {
+      LinkifyIt.prototype.test = function test2(text) {
         this.__text_cache__ = text;
         this.__index__ = -1;
         if (!text.length) {
@@ -35015,7 +35015,66 @@ and ensure you are accounting for this risk.
   markdownEditor.setFontSize("10");
   markdownEditor.getSession().setMode("ace/mode/markdown");
   markdownEditor.setTheme("ace/theme/twilight");
-  markdownEditor.setValue(`
+  function setJira() {
+    const jira = MarkMagic.toJira(markdownEditor.getValue());
+    jiraEditor.setValue(jira);
+  }
+  markdownEditor.on("focus", function() {
+    markdownEditor.on("change", setJira);
+  });
+  markdownEditor.on("blur", function() {
+    markdownEditor.off("change", setJira);
+  });
+  if (!markdownPreview) {
+    throw new Error("Markdown preview element not found");
+  }
+  var shadow = markdownPreview.attachShadow({ mode: "open" });
+  var style = document.createElement("style");
+  style.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+  shadow.appendChild(style);
+  var body = document.createElement("body");
+  shadow.appendChild(body);
+  function updateMarkdownPreview() {
+    const markdown = markdownEditor.getValue();
+    const md = new import_markdown_it.default({
+      html: true,
+      linkify: true,
+      typographer: true
+    });
+    body.innerHTML = md.render(markdown);
+  }
+  markdownEditor.on("change", updateMarkdownPreview);
+  jiraEditor.$blockScrolling = Infinity;
+  jiraEditor.getSession().setUseWrapMode(true);
+  jiraEditor.setFontSize("10");
+  jiraEditor.session.setMode("ace/mode/markdown");
+  jiraEditor.setTheme("ace/theme/twilight");
+  jiraEditor.setReadOnly(true);
+  if (!jiraPreview) {
+    throw new Error("Jira preview element not found");
+  }
+  var jiraShadow = jiraPreview.attachShadow({ mode: "open" });
+  var jiraStyle = document.createElement("style");
+  jiraStyle.textContent = `
+  body {
+    font-size: 60%;
+  }
+`;
+  jiraShadow.appendChild(jiraStyle);
+  var jiraBody = document.createElement("body");
+  jiraShadow.appendChild(jiraBody);
+  function updateJiraPreview() {
+    const jira = jiraEditor.getValue();
+    const html = MarkMagic.jiraToHtml(jira);
+    jiraBody.innerHTML = html;
+  }
+  jiraEditor.on("change", updateJiraPreview);
+  function test() {
+    markdownEditor.setValue(`
 # h1 Heading 8-)
 ## h2 Heading
 ### h3 Heading
@@ -35147,67 +35206,11 @@ The killer feature of \`markdown-it\` is very effective support of
 ::: warning
 *here be dragons*
 :::`);
-  function setJira() {
-    const jira = MarkMagic.toJira(markdownEditor.getValue());
-    jiraEditor.setValue(jira);
+    updateMarkdownPreview();
+    setJira();
+    updateJiraPreview();
   }
-  markdownEditor.on("focus", function() {
-    markdownEditor.on("change", setJira);
-  });
-  markdownEditor.on("blur", function() {
-    markdownEditor.off("change", setJira);
-  });
-  if (!markdownPreview) {
-    throw new Error("Markdown preview element not found");
-  }
-  var shadow = markdownPreview.attachShadow({ mode: "open" });
-  var style = document.createElement("style");
-  style.textContent = `
-  body {
-    font-size: 60%;
-  }
-`;
-  shadow.appendChild(style);
-  var body = document.createElement("body");
-  shadow.appendChild(body);
-  function updateMarkdownPreview() {
-    const markdown = markdownEditor.getValue();
-    const md = new import_markdown_it.default({
-      html: true,
-      linkify: true,
-      typographer: true
-    });
-    body.innerHTML = md.render(markdown);
-  }
-  markdownEditor.on("change", updateMarkdownPreview);
-  updateMarkdownPreview();
-  setJira();
-  jiraEditor.$blockScrolling = Infinity;
-  jiraEditor.getSession().setUseWrapMode(true);
-  jiraEditor.setFontSize("10");
-  jiraEditor.session.setMode("ace/mode/markdown");
-  jiraEditor.setTheme("ace/theme/twilight");
-  jiraEditor.setReadOnly(true);
-  if (!jiraPreview) {
-    throw new Error("Jira preview element not found");
-  }
-  var jiraShadow = jiraPreview.attachShadow({ mode: "open" });
-  var jiraStyle = document.createElement("style");
-  jiraStyle.textContent = `
-  body {
-    font-size: 60%;
-  }
-`;
-  jiraShadow.appendChild(jiraStyle);
-  var jiraBody = document.createElement("body");
-  jiraShadow.appendChild(jiraBody);
-  function updateJiraPreview() {
-    const jira = jiraEditor.getValue();
-    const html = MarkMagic.jiraToHtml(jira);
-    jiraBody.innerHTML = html;
-  }
-  jiraEditor.on("change", updateJiraPreview);
-  updateJiraPreview();
+  test();
 })();
 /*! Bundled license information:
 
