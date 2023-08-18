@@ -84,17 +84,17 @@ jiraEditor.session.setMode("ace/mode/markdown");
 jiraEditor.setTheme("ace/theme/twilight");
 jiraEditor.setReadOnly(true);
 
-// function setMarkdown() {
-//   const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
-//   markdownEditor.setValue(markdown);
-// }
+function setMarkdown() {
+  const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
+  markdownEditor.setValue(markdown);
+}
 
-// jiraEditor.on("focus", function () {
-//   jiraEditor.on("change", setMarkdown);
-// });
-// jiraEditor.on("blur", function () {
-//   jiraEditor.off("change", setMarkdown);
-// });
+jiraEditor.on("focus", function () {
+  jiraEditor.on("change", setMarkdown);
+});
+jiraEditor.on("blur", function () {
+  jiraEditor.off("change", setMarkdown);
+});
 
 // ==========================
 //      Jira Preview
@@ -127,147 +127,146 @@ jiraEditor.on("change", updateJiraPreview);
 // ==========================
 //      Test Data
 // ==========================
-function test() {
-  // TODO matt: remove this
-  markdownEditor.setValue(`
-# h1 Heading 8-)
-## h2 Heading
-### h3 Heading
-#### h4 Heading
-##### h5 Heading
-###### h6 Heading
+// function test() {
+//   // TODO matt: remove this
+//   markdownEditor.setValue(`
+// # h1 Heading 8-)
 
+// ## h2 Heading
 
-## Horizontal Rules
+// ### h3 Heading
 
-___
+// #### h4 Heading
 
----
+// ##### h5 Heading
 
-***
+// ###### h6 Heading
 
+// ## Horizontal Rules
 
-## Typographic replacements
+// ---
 
-Enable typographer option to see result.
+// ---
 
-(c) (C) (r) (R) (tm) (TM) (p) (P) +-
+// ---
 
-test.. test... test..... test?..... test!....
+// ## Typographic replacements
 
-!!!!!! ???? ,,  -- ---
+// Enable typographer option to see result.
 
-"Smartypants, double quotes" and 'single quotes'
+// (c) (C) (r) (R) (tm) (TM) (p) (P) +-
 
+// test.. test... test..... test?..... test!....
 
-## Emphasis
+// !!!!!! ???? ,, -- ---
 
-**This is bold text**
+// "Smartypants, double quotes" and 'single quotes'
 
-__This is bold text__
+// ## Emphasis
 
-*This is italic text*
+// **This is bold text**
 
-_This is italic text_
+// **This is bold text**
 
-~~Strikethrough~~
+// _This is italic text_
 
+// _This is italic text_
 
-## Blockquotes
+// ~~Strikethrough~~
 
+// ## Blockquotes
 
-> Blockquotes can also be nested...
->> ...by using additional greater-than signs right next to each other...
-> > > ...or with spaces between arrows.
+// > Blockquotes can also be nested...
+// >
+// > > ...by using additional greater-than signs right next to each other...
+// > >
+// > > > ...or with spaces between arrows.
 
+// ## Lists
 
-## Lists
+// Unordered
 
-Unordered
+// - Create a list by starting a line with \`+\`, \`-\`, or \`*\`
+// - Sub-lists are made by indenting 2 spaces:
+//   - Marker character change forces new list start:
+//     - Ac tristique libero volutpat at
+//     - Facilisis in pretium nisl aliquet
+//     - Nulla volutpat aliquam velit
+// - Very easy!
 
-- Create a list by starting a line with \`+\`, \`-\`, or \`*\`
-- Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    - Ac tristique libero volutpat at
-    - Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-- Very easy!
+// Ordered
 
-Ordered
+// 1. Lorem ipsum dolor sit amet
+// 2. Consectetur adipiscing elit
+// 3. Integer molestie lorem at massa
+// 4. You can use sequential numbers...
+// 5. ...or keep all the numbers as \`1.\`
 
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
-4. You can use sequential numbers...
-5. ...or keep all the numbers as \`1.\`
+// Start numbering with offset:
 
-Start numbering with offset:
+// 57. foo
+// 58. bar
 
-57. foo
-86. bar
+// ## Code
 
+// Inline \`code\`
 
-## Code
+// Block code "fences"
 
-Inline \`code\`
+// \`\`\`
+// Sample text here...
+// \`\`\`
 
-Block code "fences"
+// Syntax highlighting
 
-\`\`\`
-Sample text here...
-\`\`\`
+// \`\`\`js
+// var foo = function (bar) {
+//   return bar++;
+// };
 
-Syntax highlighting
+// console.log(foo(5));
+// \`\`\`
 
-\`\`\` js
-var foo = function (bar) {
-  return bar++;
-};
+// ## Tables
 
-console.log(foo(5));
-\`\`\`
+// | Option | Description                                                               |
+// | ------ | ------------------------------------------------------------------------- |
+// | data   | path to data files to supply the data that will be passed into templates. |
+// | engine | engine to be used for processing templates. Handlebars is the default.    |
+// | ext    | extension to be used for dest files.                                      |
 
-## Tables
+// ## Links
 
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
+// [link text](http://dev.nodeca.com)
 
+// ## Images
 
-## Links
+// ![Minion](https://octodex.github.com/images/minion.png)
 
-[link text](http://dev.nodeca.com)
+// ## Plugins
 
+// The killer feature of \`markdown-it\` is very effective support of
+// [syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
 
-## Images
+// ### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
 
-![Minion](https://octodex.github.com/images/minion.png)
+// - 19^th^
+// - H~2~O
 
-## Plugins
+// ### [Custom containers](https://github.com/markdown-it/markdown-it-container)
 
-The killer feature of \`markdown-it\` is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
+// ::: warning
+// _here be dragons_
+// :::
 
+//   `);
 
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
+//   // TODO matt: remove this
+//   updateMarkdownPreview();
+//   setJira();
 
-- 19^th^
-- H~2~O
+//   // TODO matt: remove this
+//   updateJiraPreview();
+// }
 
-### [Custom containers](https://github.com/markdown-it/markdown-it-container)
-
-::: warning
-*here be dragons*
-:::`);
-
-  // TODO matt: remove this
-  updateMarkdownPreview();
-  setJira();
-
-  // TODO matt: remove this
-  updateJiraPreview();
-}
-
-test();
+// test();

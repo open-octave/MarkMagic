@@ -21123,17 +21123,17 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.findAll = exports.existsOne = exports.findOne = exports.findOneChild = exports.find = exports.filter = void 0;
       var domhandler_1 = require_lib2();
-      function filter(test2, node, recurse, limit) {
+      function filter(test, node, recurse, limit) {
         if (recurse === void 0) {
           recurse = true;
         }
         if (limit === void 0) {
           limit = Infinity;
         }
-        return find(test2, Array.isArray(node) ? node : [node], recurse, limit);
+        return find(test, Array.isArray(node) ? node : [node], recurse, limit);
       }
       exports.filter = filter;
-      function find(test2, nodes, recurse, limit) {
+      function find(test, nodes, recurse, limit) {
         var result = [];
         var nodeStack = [nodes];
         var indexStack = [0];
@@ -21147,7 +21147,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
             continue;
           }
           var elem = nodeStack[0][indexStack[0]++];
-          if (test2(elem)) {
+          if (test(elem)) {
             result.push(elem);
             if (--limit <= 0)
               return result;
@@ -21159,11 +21159,11 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
         }
       }
       exports.find = find;
-      function findOneChild(test2, nodes) {
-        return nodes.find(test2);
+      function findOneChild(test, nodes) {
+        return nodes.find(test);
       }
       exports.findOneChild = findOneChild;
-      function findOne(test2, nodes, recurse) {
+      function findOne(test, nodes, recurse) {
         if (recurse === void 0) {
           recurse = true;
         }
@@ -21172,22 +21172,22 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
           var node = nodes[i];
           if (!(0, domhandler_1.isTag)(node)) {
             continue;
-          } else if (test2(node)) {
+          } else if (test(node)) {
             elem = node;
           } else if (recurse && node.children.length > 0) {
-            elem = findOne(test2, node.children, true);
+            elem = findOne(test, node.children, true);
           }
         }
         return elem;
       }
       exports.findOne = findOne;
-      function existsOne(test2, nodes) {
+      function existsOne(test, nodes) {
         return nodes.some(function(checked) {
-          return (0, domhandler_1.isTag)(checked) && (test2(checked) || existsOne(test2, checked.children));
+          return (0, domhandler_1.isTag)(checked) && (test(checked) || existsOne(test, checked.children));
         });
       }
       exports.existsOne = existsOne;
-      function findAll(test2, nodes) {
+      function findAll(test, nodes) {
         var result = [];
         var nodeStack = [nodes];
         var indexStack = [0];
@@ -21203,7 +21203,7 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
           var elem = nodeStack[0][indexStack[0]++];
           if (!(0, domhandler_1.isTag)(elem))
             continue;
-          if (test2(elem))
+          if (test(elem))
             result.push(elem);
           if (elem.children.length > 0) {
             indexStack.unshift(0);
@@ -21280,16 +21280,16 @@ tree.setInsertionMode("inTableText"),tree.originalInsertionMode=originalInsertio
         return funcs.length === 0 ? null : funcs.reduce(combineFuncs);
       }
       function testElement(options, node) {
-        var test2 = compileTest(options);
-        return test2 ? test2(node) : true;
+        var test = compileTest(options);
+        return test ? test(node) : true;
       }
       exports.testElement = testElement;
       function getElements(options, nodes, recurse, limit) {
         if (limit === void 0) {
           limit = Infinity;
         }
-        var test2 = compileTest(options);
-        return test2 ? (0, querying_js_1.filter)(test2, nodes, recurse, limit) : [];
+        var test = compileTest(options);
+        return test ? (0, querying_js_1.filter)(test, nodes, recurse, limit) : [];
       }
       exports.getElements = getElements;
       function getElementById(id, nodes, recurse) {
@@ -31244,7 +31244,7 @@ and ensure you are accounting for this risk.
         this.__opts__ = assign(this.__opts__, options);
         return this;
       };
-      LinkifyIt.prototype.test = function test2(text) {
+      LinkifyIt.prototype.test = function test(text) {
         this.__text_cache__ = text;
         this.__index__ = -1;
         if (!text.length) {
@@ -34920,14 +34920,15 @@ and ensure you are accounting for this risk.
     const ANGLE_LINK_REGEX = /<([^>]+)>/g;
     const HORIZONTAL_RULE_REGEX = /^(?:___|---|\*\*\*)$/gm;
     const BLOCK_QUOTE_REGEX = /^>[\s>|>]* (.*)$/gm;
-    let jira = markdown.replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock).replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock).replace(HORIZONTAL_RULE_REGEX, "----").replace(BLOCK_QUOTE_REGEX, "{quote}\n$1\n{quote}\n").replace(
+    const IMAGE_REGEX = /!\[.*\]\((.*)\)/g;
+    let jira = markdown.replace(MULTI_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceMultiLineCodeBlock).replace(SINGLE_LINE_CODE_BLOCK_SYNTAX_REGEX, replaceSingleLineCodeBlock).replace(IMAGE_REGEX, "!$1!").replace(HORIZONTAL_RULE_REGEX, "----").replace(BLOCK_QUOTE_REGEX, "{quote}\n$1\n{quote}\n").replace(
       HEADING_REGEX,
       (_, level, content) => "h" + level.length + "." + content
     ).replace(BOLD_ITALIC_REGEX, (_, wrapper, content) => {
       const to = wrapper.length === 1 ? "_" : "*";
       return to + content + to;
     }).replace(LIST_REGEX, (_, level, content) => {
-      const depth = Math.floor(level.length / 4 + 1);
+      const depth = Math.floor(level.length / 2 + 1);
       return Array(depth + 1).join("*") + " " + content;
     }).replace(
       SPECIAL_FORMAT_REGEX,
@@ -34935,8 +34936,11 @@ and ensure you are accounting for this risk.
         return SPECIAL_FORMAT_MAP[from] + content + SPECIAL_FORMAT_MAP[from];
       }
     ).replace(STRIKETHROUGH_REGEX, "-$1-").replace(INLINE_CODE_REGEX, "{{$1}}").replace(LINK_REGEX, replaceLinks).replace(ANGLE_LINK_REGEX, "[$1]");
+    jira = replaceTables(jira);
+    return jira;
+  }
+  function replaceTables(jira) {
     const jiraAsArray = jira.split("\n");
-    const markdownDividerElementIndexes = [];
     jiraAsArray.forEach((line, index) => {
       if (line.startsWith("| -")) {
         jiraAsArray[index - 1] = jiraAsArray[index - 1].replaceAll("|", "||");
@@ -35054,6 +35058,16 @@ and ensure you are accounting for this risk.
   jiraEditor.session.setMode("ace/mode/markdown");
   jiraEditor.setTheme("ace/theme/twilight");
   jiraEditor.setReadOnly(true);
+  function setMarkdown() {
+    const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
+    markdownEditor.setValue(markdown);
+  }
+  jiraEditor.on("focus", function() {
+    jiraEditor.on("change", setMarkdown);
+  });
+  jiraEditor.on("blur", function() {
+    jiraEditor.off("change", setMarkdown);
+  });
   if (!jiraPreview) {
     throw new Error("Jira preview element not found");
   }
@@ -35073,144 +35087,6 @@ and ensure you are accounting for this risk.
     jiraBody.innerHTML = html;
   }
   jiraEditor.on("change", updateJiraPreview);
-  function test() {
-    markdownEditor.setValue(`
-# h1 Heading 8-)
-## h2 Heading
-### h3 Heading
-#### h4 Heading
-##### h5 Heading
-###### h6 Heading
-
-
-## Horizontal Rules
-
-___
-
----
-
-***
-
-
-## Typographic replacements
-
-Enable typographer option to see result.
-
-(c) (C) (r) (R) (tm) (TM) (p) (P) +-
-
-test.. test... test..... test?..... test!....
-
-!!!!!! ???? ,,  -- ---
-
-"Smartypants, double quotes" and 'single quotes'
-
-
-## Emphasis
-
-**This is bold text**
-
-__This is bold text__
-
-*This is italic text*
-
-_This is italic text_
-
-~~Strikethrough~~
-
-
-## Blockquotes
-
-
-> Blockquotes can also be nested...
->> ...by using additional greater-than signs right next to each other...
-> > > ...or with spaces between arrows.
-
-
-## Lists
-
-Unordered
-
-- Create a list by starting a line with \`+\`, \`-\`, or \`*\`
-- Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    - Ac tristique libero volutpat at
-    - Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-- Very easy!
-
-Ordered
-
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
-4. You can use sequential numbers...
-5. ...or keep all the numbers as \`1.\`
-
-Start numbering with offset:
-
-57. foo
-86. bar
-
-
-## Code
-
-Inline \`code\`
-
-Block code "fences"
-
-\`\`\`
-Sample text here...
-\`\`\`
-
-Syntax highlighting
-
-\`\`\` js
-var foo = function (bar) {
-  return bar++;
-};
-
-console.log(foo(5));
-\`\`\`
-
-## Tables
-
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
-
-
-## Links
-
-[link text](http://dev.nodeca.com)
-
-
-## Images
-
-![Minion](https://octodex.github.com/images/minion.png)
-
-## Plugins
-
-The killer feature of \`markdown-it\` is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
-
-
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
-
-- 19^th^
-- H~2~O
-
-### [Custom containers](https://github.com/markdown-it/markdown-it-container)
-
-::: warning
-*here be dragons*
-:::`);
-    updateMarkdownPreview();
-    setJira();
-    updateJiraPreview();
-  }
-  test();
 })();
 /*! Bundled license information:
 
