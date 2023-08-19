@@ -4,7 +4,7 @@
 <!-- 
 ---- Extension Container
 -->
-<body class="w-[50rem] h-[50rem] overflow-hidden p-2 bg-slate-900">
+<body class="w-[50rem] h-[53.5rem] overflow-hidden p-2 bg-slate-900">
   <main class="p-3 bg-slate-800 text-slate-400 rounded-md h-full">
     <!-- 
     ---- Header Container
@@ -38,6 +38,99 @@
     <hr class="mt-1 mb-3 border-slate-600" />
 
     <!-- 
+    ---- Action Buttons
+    -->
+    <div class="flex items-center gap-x-3 mb-3">
+      <!-- Copy Jira Markup Button  -->
+      <button
+        type="button"
+        class="h-10 inline-flex items-center gap-x-0.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        <!-- Copy Icon SVG -->
+        <svg
+          class="h-8 w-8 stroke-white transition group-hover:rotate-[-4deg] group-hover:stroke-slate-600"
+          fill="none"
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M12.9975 10.7499L11.7475 10.7499C10.6429 10.7499 9.74747 11.6453 9.74747 12.7499L9.74747 21.2499C9.74747 22.3544 10.6429 23.2499 11.7475 23.2499L20.2475 23.2499C21.352 23.2499 22.2475 22.3544 22.2475 21.2499L22.2475 12.7499C22.2475 11.6453 21.352 10.7499 20.2475 10.7499L18.9975 10.7499"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M17.9975 12.2499L13.9975 12.2499C13.4452 12.2499 12.9975 11.8022 12.9975 11.2499L12.9975 9.74988C12.9975 9.19759 13.4452 8.74988 13.9975 8.74988L17.9975 8.74988C18.5498 8.74988 18.9975 9.19759 18.9975 9.74988L18.9975 11.2499C18.9975 11.8022 18.5498 12.2499 17.9975 12.2499Z"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M13.7475 16.2499L18.2475 16.2499"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M13.7475 19.2499L18.2475 19.2499"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <g class="opacity-0">
+            <path
+              d="M15.9975 5.99988L15.9975 3.99988"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+            <path
+              d="M19.9975 5.99988L20.9975 4.99988"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+            <path
+              d="M11.9975 5.99988L10.9975 4.99988"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </g>
+        </svg>
+
+        <p class="select-none">Copy Jira Markup</p>
+      </button>
+
+      <!-- Clear Button -->
+      <button
+        type="button"
+        class="h-10 inline-flex items-center gap-x-1.5 rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        <!-- Clear Icon SVG -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+          />
+        </svg>
+
+        <p class="text-red-100 select-none">Clear</p>
+      </button>
+    </div>
+
+    <!-- 
     ---- Main Content Container
     -->
     <div class="w-full flex flex-col gap-10 text-white">
@@ -59,7 +152,7 @@
           <h2 class="text-sm font-semibold mb-2">Preview</h2>
           <div
             id="markdown-preview"
-            class="w-full h-full bg-gray-200 text-black overflow-y-scroll"
+            class="w-full h-full bg-gray-200 drop-shadow-md text-black overflow-y-scroll"
           ></div>
         </div>
       </section>
@@ -82,7 +175,7 @@
           <h2 class="text-sm font-semibold mb-2">Preview</h2>
           <div
             id="jira-preview"
-            class="w-full h-full bg-gray-200 text-black overflow-y-scroll"
+            class="w-full h-full bg-gray-200 drop-shadow-md text-black overflow-y-scroll"
           ></div>
         </div>
       </section>
