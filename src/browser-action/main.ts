@@ -3,7 +3,7 @@ import * as ace from "brace";
 import "brace/mode/markdown";
 import "brace/theme/twilight";
 
-import { MarkMagic } from "./mark-magic";
+import * as MarkMagic from "./logic";
 
 import MarkdownIt from "markdown-it";
 
@@ -27,7 +27,7 @@ markdownEditor.setTheme("ace/theme/twilight");
 // ------
 
 function setJira() {
-  const jira = MarkMagic.toJira(markdownEditor.getValue());
+  const jira = MarkMagic.markdownToJira(markdownEditor.getValue());
   jiraEditor.setValue(jira);
 }
 
