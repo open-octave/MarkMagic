@@ -35058,6 +35058,7 @@ and ensure you are accounting for this risk.
   jiraEditor.session.setMode("ace/mode/markdown");
   jiraEditor.setTheme("ace/theme/twilight");
   jiraEditor.setReadOnly(true);
+  jiraEditor.renderer.$cursorLayer.element.style.display = "none";
   function setMarkdown() {
     const markdown = MarkMagic.toMarkdown(jiraEditor.getValue());
     markdownEditor.setValue(markdown);
@@ -35091,9 +35092,17 @@ and ensure you are accounting for this risk.
   if (!copyJiraButton) {
     throw new Error("Copy Jira button not found");
   }
+  var copyAlertButton = document.getElementById("copy-alert");
+  if (!copyAlertButton) {
+    throw new Error("Copy Alert button not found");
+  }
   copyJiraButton.addEventListener("click", function() {
     const jira = jiraEditor.getValue();
     navigator.clipboard.writeText(jira);
+    copyAlertButton.classList.remove("hidden");
+    setTimeout(function() {
+      copyAlertButton.classList.add("hidden");
+    }, 3e3);
   });
   var clearAllButton = document.getElementById("clear-all-button");
   if (!clearAllButton) {
