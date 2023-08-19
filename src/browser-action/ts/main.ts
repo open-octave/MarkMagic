@@ -125,6 +125,32 @@ function updateJiraPreview() {
 jiraEditor.on("change", updateJiraPreview);
 
 // ==========================
+//      Actions Buttons
+// ==========================
+
+// Copy Jira Markup to Clipboard
+const copyJiraButton = document.getElementById("copy-jira-button");
+if (!copyJiraButton) {
+  throw new Error("Copy Jira button not found");
+}
+
+copyJiraButton.addEventListener("click", function () {
+  const jira = jiraEditor.getValue();
+  navigator.clipboard.writeText(jira);
+});
+
+// Clear All Button
+const clearAllButton = document.getElementById("clear-all-button");
+if (!clearAllButton) {
+  throw new Error("Clear All button not found");
+}
+
+clearAllButton.addEventListener("click", function () {
+  markdownEditor.setValue("");
+  jiraEditor.setValue("");
+});
+
+// ==========================
 //      Test Data
 // ==========================
 // function test() {

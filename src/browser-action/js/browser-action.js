@@ -35087,6 +35087,22 @@ and ensure you are accounting for this risk.
     jiraBody.innerHTML = html;
   }
   jiraEditor.on("change", updateJiraPreview);
+  var copyJiraButton = document.getElementById("copy-jira-button");
+  if (!copyJiraButton) {
+    throw new Error("Copy Jira button not found");
+  }
+  copyJiraButton.addEventListener("click", function() {
+    const jira = jiraEditor.getValue();
+    navigator.clipboard.writeText(jira);
+  });
+  var clearAllButton = document.getElementById("clear-all-button");
+  if (!clearAllButton) {
+    throw new Error("Clear All button not found");
+  }
+  clearAllButton.addEventListener("click", function() {
+    markdownEditor.setValue("");
+    jiraEditor.setValue("");
+  });
 })();
 /*! Bundled license information:
 
