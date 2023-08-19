@@ -4,14 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/browser-action/main.js --bundle --minify --outfile=src/browser-action/browser-action.js",
+    "build": "esbuild src/browser-action/main.ts --bundle --minify --outfile=src/dist/browser-action/browser-action.js",
     "dev:css": "npx tailwindcss -i ./src/css/main.css -o ./src/css/styles.css --watch",
-    "dev:js": "esbuild src/browser-action/ts/main.ts --bundle --sourcemap --outfile=src/browser-action/js/browser-action.js --watch",
+    "dev:js": "esbuild src/browser-action/main.ts --bundle --sourcemap --outfile=src/dist/browser-action/browser-action.js --watch",
     "dev": "concurrently \"npm run dev:css\" \"npm run dev:js\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "PCDSandwichMan",
   "dependencies": {
     "ace-builds": "^1.18.0",
     "brace": "^0.11.1",
