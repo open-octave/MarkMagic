@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild src/browser-action/main.ts --bundle --minify --outfile=src/dist/browser-action/browser-action.js",
-    "dev:css": "npx tailwindcss -i ./src/css/main.css -o ./src/css/styles.css --watch",
-    "dev:js": "esbuild src/browser-action/main.ts --bundle --sourcemap --outfile=src/dist/browser-action/browser-action.js --watch",
-    "dev": "concurrently \"npm run dev:css\" \"npm run dev:js\""
+    "build:css": "pnpm tailwind:base",
+    "build:js": "pnpm esbuild:base --minify",
+    "build": "pnpm clean && pnpm build:css && pnpm build:js",
+    "clean": "rm -rf src/dist/",
+    "dev:css": "pnpm build:css --watch",
+    "dev:js": "pnpm esbuild:base --sourcemap --watch",
+    "dev": "concurrently \"pnpm run dev:css\" \"pnpm run dev:js\"",
+    "esbuild:base": "esbuild src/browser-action/main.ts --bundle --outfile=src/dist/browser-action/browser-action.js",
+    "tailwind:base": "npx tailwindcss -i ./src/css/main.css -o ./src/css/styles.css"
   },
   "author": "PCDSandwichMan",
   "dependencies": {
