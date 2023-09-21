@@ -42,35 +42,35 @@ markdownEditor.on("blur", function () {
 //       Markdown Preview
 // ============================
 
-if (!markdownPreview) {
-  throw new Error("Markdown preview element not found");
-}
+// if (!markdownPreview) {
+//   throw new Error("Markdown preview element not found");
+// }
 
-const shadow = markdownPreview.attachShadow({ mode: "open" });
+// const shadow = markdownPreview.attachShadow({ mode: "open" });
 
-const style = document.createElement("style");
-style.textContent = `
-  body {
-    font-size: 60%;
-  }
-`;
-shadow.appendChild(style);
+// const style = document.createElement("style");
+// style.textContent = `
+//   body {
+//     font-size: 60%;
+//   }
+// `;
+// shadow.appendChild(style);
 
-const body = document.createElement("body");
-shadow.appendChild(body);
+// const body = document.createElement("body");
+// shadow.appendChild(body);
 
-function updateMarkdownPreview() {
-  const markdown = markdownEditor.getValue();
-  const md = new MarkdownIt({
-    html: true,
-    linkify: true,
-    typographer: true,
-  });
+// function updateMarkdownPreview() {
+//   const markdown = markdownEditor.getValue();
+//   const md = new MarkdownIt({
+//     html: true,
+//     linkify: true,
+//     typographer: true,
+//   });
 
-  body.innerHTML = md.render(markdown);
-}
+//   body.innerHTML = md.render(markdown);
+// }
 
-markdownEditor.on("change", updateMarkdownPreview);
+// markdownEditor.on("change", updateMarkdownPreview);
 
 // ==========================
 //      Jira Editor
@@ -100,30 +100,30 @@ jiraEditor.on("blur", function () {
 // ==========================
 //      Jira Preview
 // ==========================
-if (!jiraPreview) {
-  throw new Error("Jira preview element not found");
-}
+// if (!jiraPreview) {
+//   throw new Error("Jira preview element not found");
+// }
 
-const jiraShadow = jiraPreview.attachShadow({ mode: "open" });
+// const jiraShadow = jiraPreview.attachShadow({ mode: "open" });
 
-const jiraStyle = document.createElement("style");
-jiraStyle.textContent = `
-  body {
-    font-size: 60%;
-  }
-`;
-jiraShadow.appendChild(jiraStyle);
+// const jiraStyle = document.createElement("style");
+// jiraStyle.textContent = `
+//   body {
+//     font-size: 60%;
+//   }
+// `;
+// jiraShadow.appendChild(jiraStyle);
 
-const jiraBody = document.createElement("body");
-jiraShadow.appendChild(jiraBody);
+// const jiraBody = document.createElement("body");
+// jiraShadow.appendChild(jiraBody);
 
-function updateJiraPreview() {
-  const jira = jiraEditor.getValue();
-  const html = MarkMagic.jiraToHtml(jira);
-  jiraBody.innerHTML = html;
-}
+// function updateJiraPreview() {
+//   const jira = jiraEditor.getValue();
+//   const html = MarkMagic.jiraToHtml(jira);
+//   jiraBody.innerHTML = html;
+// }
 
-jiraEditor.on("change", updateJiraPreview);
+// jiraEditor.on("change", updateJiraPreview);
 
 // ==========================
 //      Actions Buttons
