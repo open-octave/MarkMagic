@@ -7,11 +7,13 @@ import * as MarkMagic from "./logic";
 
 import MarkdownIt from "markdown-it";
 
+import showdown from "showdown";
+
 const markdownEditor = ace.edit("markdown-editor");
-const markdownPreview = document.getElementById("markdown-preview");
+// const markdownPreview = document.getElementById("markdown-preview");
 
 const jiraEditor = ace.edit("jira-editor");
-const jiraPreview = document.getElementById("jira-preview");
+// const jiraPreview = document.getElementById("jira-preview");
 
 // ============================
 //       Markdown Editor
@@ -67,7 +69,12 @@ markdownEditor.on("blur", function () {
 //     typographer: true,
 //   });
 
-//   body.innerHTML = md.render(markdown);
+//   const converter = new showdown.Converter();
+
+// console.log(md.render(markdown));
+// console.log(converter.makeMarkdown(markdown));
+
+// body.innerHTML = md.render(markdown);
 // }
 
 // markdownEditor.on("change", updateMarkdownPreview);
@@ -120,7 +127,7 @@ jiraEditor.on("blur", function () {
 // function updateJiraPreview() {
 //   const jira = jiraEditor.getValue();
 //   const html = MarkMagic.jiraToHtml(jira);
-//   jiraBody.innerHTML = html;
+// jiraBody.innerHTML = html;
 // }
 
 // jiraEditor.on("change", updateJiraPreview);
