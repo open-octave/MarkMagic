@@ -1,8 +1,9 @@
 {
   "name": "ext",
   "version": "1.0.0",
-  "description": "",
+  "description": "PCDSandwichMan",
   "main": "index.js",
+  "license": "GPL-3.0",
   "scripts": {
     "build:css": "pnpm tailwind:base",
     "build:js": "pnpm esbuild:base --minify",
